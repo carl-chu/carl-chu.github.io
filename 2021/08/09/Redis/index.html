@@ -1,0 +1,929 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="CarlChu">
+  <meta name="keywords" content="">
+  
+  <title>Redis - CarlChu的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>CarlChu</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Redis">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      CarlChu
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-09 10:20" pubdate>
+        2021年8月9日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      135
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redis</h1>
+            
+            <div class="markdown-body">
+              <p><strong>Redis</strong></p>
+<h2 id="Windows下使用"><a href="#Windows下使用" class="headerlink" title="Windows下使用"></a>Windows下使用</h2><ul>
+<li>redis-server.exe启动服务，默认端口号6379</li>
+<li>redis-cli.exe打开客户端</li>
+<li>ping命令测试是否连接，连接正常返回PONG</li>
+</ul>
+<h2 id="Redis的基本知识"><a href="#Redis的基本知识" class="headerlink" title="Redis的基本知识"></a>Redis的基本知识</h2><p>redis默认有16个数据库</p>
+<p><img src="/2021/08/09/Redis/image-20210709120427992.png" srcset="/img/loading.gif" lazyload></p>
+<p>默认使用第0个数据库</p>
+<p>可以使用select进行切换</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; ping<br>PONG<br>127.0.0.1:6379&gt; select 1<br>OK<br>127.0.0.1:6379[1]&gt; select 0<br>OK<br>127.0.0.1:6379&gt; DBSIZE<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt;<br></code></pre></td></tr></table></figure>
+
+<p>查询当前数据库所有的key <code>keys *</code></p>
+<p>清除当前数据库<code>flushdb </code></p>
+<p>清除全部数据库的内容<code>FLUSHALL</code></p>
+<blockquote>
+<p>Redis是单线程的</p>
+</blockquote>
+<p>Redis是基于内存操作，CPU不是Redis性能瓶颈，Redis的瓶颈是内存和网络带宽。</p>
+<h2 id="五大数据类型"><a href="#五大数据类型" class="headerlink" title="五大数据类型"></a>五大数据类型</h2><h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> key1 v1		<span class="hljs-comment">#设置值</span><br>OK<br>127.0.0.1:6379&gt; get key1		<span class="hljs-comment">#获得值</span><br><span class="hljs-string">&quot;v1&quot;</span><br>127.0.0.1:6379&gt; EXISTS key1		<span class="hljs-comment">#判断一个key是否存在</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; APPEND key1 <span class="hljs-string">&quot;hello&quot;</span>	<span class="hljs-comment">#追加字符串，如果当前key不存在，相当于setkey</span><br>(<span class="hljs-built_in">integer</span>) 7<br>127.0.0.1:6379&gt; get key1<br><span class="hljs-string">&quot;v1hello&quot;</span><br>127.0.0.1:6379&gt; STRLEN key1		<span class="hljs-comment">#获取字符串的长度</span><br>(<span class="hljs-built_in">integer</span>) 7<br></code></pre></td></tr></table></figure>
+
+<p>String类型的常用命令</p>
+<p>自加：incr</p>
+<p>自减：decr</p>
+<p>加：incrby</p>
+<p>减：decrby</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> view 0<br>OK<br>127.0.0.1:6379&gt; get view<br><span class="hljs-string">&quot;0&quot;</span><br>127.0.0.1:6379&gt; incr view	<span class="hljs-comment">#自增1</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; decr view	<span class="hljs-comment">#自减1</span><br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; INCRBY view 5	<span class="hljs-comment">#设置步长，指定增量，+5</span><br>(<span class="hljs-built_in">integer</span>) 5<br>127.0.0.1:6379&gt; DECRBY view 3	<span class="hljs-comment">#-3</span><br>(<span class="hljs-built_in">integer</span>) 2<br><span class="hljs-comment">################################################</span><br><span class="hljs-comment">#字符串范围</span><br>127.0.0.1:6379&gt; get key1<br><span class="hljs-string">&quot;v1hello&quot;</span><br>127.0.0.1:6379&gt; GETRANGE key1 0 2	<span class="hljs-comment">#截取字符串 [0,2]</span><br><span class="hljs-string">&quot;v1h&quot;</span><br>127.0.0.1:6379&gt; GETRANGE key1 0 -1	<span class="hljs-comment">#获取全部的字符串，和get key是一样的</span><br><span class="hljs-string">&quot;v1hello&quot;</span><br><br><span class="hljs-comment">#替换</span><br>127.0.0.1:6379&gt; get key1<br><span class="hljs-string">&quot;v1hello&quot;</span><br>127.0.0.1:6379&gt; SETRANGE key1 0 czh	<span class="hljs-comment">#替换指定位置开始的字符串</span><br>(<span class="hljs-built_in">integer</span>) 7<br>127.0.0.1:6379&gt; get key1<br><span class="hljs-string">&quot;czhello&quot;</span><br><span class="hljs-comment">###############################################</span><br><span class="hljs-comment"># setex (set with expire) #设置过期时间</span><br><span class="hljs-comment"># setnx (set if exist)	#不存在再设置（在分布式锁中会常常使用）</span><br>127.0.0.1:6379&gt; setex key2 30 <span class="hljs-string">&quot;hello&quot;</span>	<span class="hljs-comment">#设置key2的值为hello，30秒后过期</span><br>OK<br>127.0.0.1:6379&gt; ttl key2<br>(<span class="hljs-built_in">integer</span>) 22<br>127.0.0.1:6379&gt; get key2<br><span class="hljs-string">&quot;hello&quot;</span><br>127.0.0.1:6379&gt; setnx mykey <span class="hljs-string">&quot;redis&quot;</span>	<span class="hljs-comment">#如果mykey不存在，创建mykey</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; keys *<br>1) <span class="hljs-string">&quot;view&quot;</span><br>2) <span class="hljs-string">&quot;mykey&quot;</span><br>3) <span class="hljs-string">&quot;key1&quot;</span><br>127.0.0.1:6379&gt; ttl key2<br>(<span class="hljs-built_in">integer</span>) -2<br>127.0.0.1:6379&gt; setnx mykey <span class="hljs-string">&quot;MongoDB&quot;</span>	<span class="hljs-comment">#mykey存在，创建失败</span><br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; get mykey<br><span class="hljs-string">&quot;redis&quot;</span><br><span class="hljs-comment">###############################################</span><br><span class="hljs-comment"># mset</span><br><span class="hljs-comment"># mget</span><br>127.0.0.1:6379&gt; mset k1 v1 k2 v2 k3 v3	<span class="hljs-comment">#同时设置多个值</span><br>OK<br>127.0.0.1:6379&gt; mget k1 k2 k3	<span class="hljs-comment">#同时获取多个值</span><br>1) <span class="hljs-string">&quot;v1&quot;</span><br>2) <span class="hljs-string">&quot;v2&quot;</span><br>3) <span class="hljs-string">&quot;v3&quot;</span><br>127.0.0.1:6379&gt; msetnx k1 v1 k4 v4	<span class="hljs-comment">#msetnx是一个原子性操作，要么一起成功，要么一起失败</span><br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; get k4<br>(nil)<br><br><span class="hljs-comment"># 对象</span><br><span class="hljs-built_in">set</span> user:1 &#123;name:zhangsan,age:3&#125; <span class="hljs-comment">#设置一个user:1 对象值为json字符来保存一个对象</span><br><br><span class="hljs-comment">##################################################</span><br>getset <span class="hljs-comment">#先get再set</span><br><br>127.0.0.1:6379&gt; getset db redis<br>(nil)<br>127.0.0.1:6379&gt; get db<br><span class="hljs-string">&quot;redis&quot;</span><br>127.0.0.1:6379&gt; getset db mongodb<br><span class="hljs-string">&quot;redis&quot;</span><br>127.0.0.1:6379&gt; get db<br><span class="hljs-string">&quot;mongodb&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>String类似的使用场景：value除了是字符串还可以是数字。</p>
+<ul>
+<li>计数器</li>
+<li>统计数量</li>
+<li>对象缓存存储</li>
+</ul>
+<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>基本的数据类型，列表</p>
+<p>在redis里面，可以用list实现栈、队列、阻塞队列</p>
+<p>redis命令不区分大小写</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; LPUSH list one	<span class="hljs-comment">#将一个值或者多个值，插入到列表头部（左）</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; LPUSH list two<br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; LPUSH list three<br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; LRANGE list 0 -1	<span class="hljs-comment">#获取list中的值</span><br>1) <span class="hljs-string">&quot;three&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>3) <span class="hljs-string">&quot;one&quot;</span><br>127.0.0.1:6379&gt; LRANGE list 0 1<br>1) <span class="hljs-string">&quot;three&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>127.0.0.1:6379&gt; RPUSH list right<br>(<span class="hljs-built_in">integer</span>) 4<br>127.0.0.1:6379&gt; LRANGE list 0 -1<br>1) <span class="hljs-string">&quot;three&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>3) <span class="hljs-string">&quot;one&quot;</span><br>4) <span class="hljs-string">&quot;right&quot;</span><br><br><span class="hljs-comment">#########################################</span><br>LPOP<br>RPOP<br>127.0.0.1:6379&gt; LRANGE list 0 -1<br>1) <span class="hljs-string">&quot;three&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>3) <span class="hljs-string">&quot;one&quot;</span><br>4) <span class="hljs-string">&quot;right&quot;</span><br>127.0.0.1:6379&gt; LPOP list	<span class="hljs-comment">#移除list的第一个元素</span><br><span class="hljs-string">&quot;three&quot;</span><br>127.0.0.1:6379&gt; RPOP list	<span class="hljs-comment">#移除list的最后一个元素</span><br><span class="hljs-string">&quot;right&quot;</span><br>127.0.0.1:6379&gt; LRANGE list 0 -1<br>1) <span class="hljs-string">&quot;two&quot;</span><br>2) <span class="hljs-string">&quot;one&quot;</span><br><span class="hljs-comment">###########################################</span><br>LINDEX<br>127.0.0.1:6379&gt; LRANGE list 0 -1<br>1) <span class="hljs-string">&quot;two&quot;</span><br>2) <span class="hljs-string">&quot;one&quot;</span><br>127.0.0.1:6379&gt; LINDEX list 1	<span class="hljs-comment">#通过下标获得list中的某一个值</span><br><span class="hljs-string">&quot;one&quot;</span><br>127.0.0.1:6379&gt; LINDEX list 0<br><span class="hljs-string">&quot;two&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>LLEN<br>127.0.0.1:6379&gt; LPUSH list one<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; LPUSH list two<br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; LPUSH list three<br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; LLEN list	<span class="hljs-comment">#返回列表的长度</span><br>(<span class="hljs-built_in">integer</span>) 3<br><br><span class="hljs-comment">##############################################</span><br>LREM 移除指定的值<br>127.0.0.1:6379&gt; LRANGE list 0 -1<br>1) <span class="hljs-string">&quot;three&quot;</span><br>2) <span class="hljs-string">&quot;three&quot;</span><br>3) <span class="hljs-string">&quot;two&quot;</span><br>4) <span class="hljs-string">&quot;one&quot;</span><br>127.0.0.1:6379&gt; LREM list 1 one	<span class="hljs-comment"># 移除list集合中指定个数的value，精确匹配</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; LRANGE list 0 -1<br>1) <span class="hljs-string">&quot;three&quot;</span><br>2) <span class="hljs-string">&quot;three&quot;</span><br>3) <span class="hljs-string">&quot;two&quot;</span><br>127.0.0.1:6379&gt; LREM list 1 three<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; LRANGE list 0 -1<br>1) <span class="hljs-string">&quot;three&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>127.0.0.1:6379&gt; lpush list three<br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; lrem list 2 three<br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; lrange list 0 -1<br>1) <span class="hljs-string">&quot;two&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>trim 修剪：list截断<br><br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;hello&quot;</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; RPUSH mylist <span class="hljs-string">&quot;hello1&quot;</span><br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;hello2&quot;</span><br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;hello3&quot;</span><br>(<span class="hljs-built_in">integer</span>) 4<br>127.0.0.1:6379&gt; LTRIM mylist 1 2	<span class="hljs-comment">#通过下标截取指定的长度，这个List已经被改变了</span><br>OK<br>127.0.0.1:6379&gt; LRANGE mylist 0 -1<br>1) <span class="hljs-string">&quot;hello1&quot;</span><br>2) <span class="hljs-string">&quot;hello2&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>rpoplpush <span class="hljs-comment">#移除列表的最后一个元素，将其移动到新的列表中</span><br><br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;hello&quot;</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;hello1&quot;</span><br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;hello2&quot;</span><br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; rpoplpush mylist myotherlist<br><span class="hljs-string">&quot;hello2&quot;</span><br>127.0.0.1:6379&gt; lrange mylist 0 -1<br>1) <span class="hljs-string">&quot;hello&quot;</span><br>2) <span class="hljs-string">&quot;hello1&quot;</span><br>127.0.0.1:6379&gt; lrange myotherlist 0 -1<br>1) <span class="hljs-string">&quot;hello2&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>lset <span class="hljs-comment">#将列表中指定下标的值替换为另外一个值，更新操作</span><br><br>127.0.0.1:6379&gt; EXISTS list	<span class="hljs-comment">#判断列表是否存在</span><br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; lset list 0 item<br>(error) ERR no such key<br>127.0.0.1:6379&gt; lpush list value1<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; lrange list 0 0<br>1) <span class="hljs-string">&quot;value1&quot;</span><br>127.0.0.1:6379&gt; lset list 0 item<br>OK<br>127.0.0.1:6379&gt; lrange list 0 0<br>1) <span class="hljs-string">&quot;item&quot;</span><br>127.0.0.1:6379&gt; lset list 1 other<br>(error) ERR index out of range<br><br><span class="hljs-comment">##############################################</span><br>linsert	<span class="hljs-comment"># 将某个具体的value插入到列表中某个元素的前面或后面</span><br><br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;hello&quot;</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; rpush mylist <span class="hljs-string">&quot;world&quot;</span><br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; linsert mylist before <span class="hljs-string">&quot;world&quot;</span> <span class="hljs-string">&quot;other&quot;</span><br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; LRANGE mylist 0 -1<br>1) <span class="hljs-string">&quot;hello&quot;</span><br>2) <span class="hljs-string">&quot;other&quot;</span><br>3) <span class="hljs-string">&quot;world&quot;</span><br>127.0.0.1:6379&gt; LINSERT mylist after world new<br>(<span class="hljs-built_in">integer</span>) 4<br>127.0.0.1:6379&gt; lrange mylist 0 -1<br>1) <span class="hljs-string">&quot;hello&quot;</span><br>2) <span class="hljs-string">&quot;other&quot;</span><br>3) <span class="hljs-string">&quot;world&quot;</span><br>4) <span class="hljs-string">&quot;new&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Set（集合）"><a href="#Set（集合）" class="headerlink" title="Set（集合）"></a>Set（集合）</h3><p>set中的值不能重复</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; sadd myset hello	<span class="hljs-comment">#set中添加元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd myset czh<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd myset llx<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; SMEMBERS myset	<span class="hljs-comment">#查看指定set的所有值</span><br>1) <span class="hljs-string">&quot;hello&quot;</span><br>2) <span class="hljs-string">&quot;llx&quot;</span><br>3) <span class="hljs-string">&quot;czh&quot;</span><br>127.0.0.1:6379&gt; SISMEMBER myset hello	<span class="hljs-comment">#判断某一个值是否在set集合中</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; SISMEMBER myset world<br>(<span class="hljs-built_in">integer</span>) 0<br><br><span class="hljs-comment">##############################################</span><br>127.0.0.1:6379&gt; SCARD myset	<span class="hljs-comment">#获取set集合中元素的个数</span><br>(<span class="hljs-built_in">integer</span>) 3<br><br><span class="hljs-comment">##############################################</span><br>srem<br><br>127.0.0.1:6379&gt; srem myset hello	<span class="hljs-comment">#移除set集合中的指定元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; SCARD myset<br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; SMEMBERS myset<br>1) <span class="hljs-string">&quot;llx&quot;</span><br>2) <span class="hljs-string">&quot;czh&quot;</span><br><br><span class="hljs-comment">##############################################</span><br><span class="hljs-built_in">set</span> 无序不重复集合，抽随机<br><br>127.0.0.1:6379&gt; SMEMBERS myset<br>1) <span class="hljs-string">&quot;byl&quot;</span><br>2) <span class="hljs-string">&quot;yl&quot;</span><br>3) <span class="hljs-string">&quot;llx&quot;</span><br>4) <span class="hljs-string">&quot;czh&quot;</span><br>127.0.0.1:6379&gt; SRANDMEMBER myset	<span class="hljs-comment">#随机抽选出一个元素</span><br><span class="hljs-string">&quot;llx&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>随机删除key<br><br>127.0.0.1:6379&gt; spop myset<br><span class="hljs-string">&quot;llx&quot;</span><br>127.0.0.1:6379&gt; spop myset<br><span class="hljs-string">&quot;czh&quot;</span><br>127.0.0.1:6379&gt; SMEMBERS myset<br>1) <span class="hljs-string">&quot;byl&quot;</span><br>2) <span class="hljs-string">&quot;yl&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>将一个指定的值，移动到另外一个<span class="hljs-built_in">set</span>集合<br><br>127.0.0.1:6379&gt; sadd myset <span class="hljs-string">&quot;hello&quot;</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd myset <span class="hljs-string">&quot;world&quot;</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd myset <span class="hljs-string">&quot;ks&quot;</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd myset2 set2<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; smove myset myset2 ks<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; SMEMBERS myset<br>1) <span class="hljs-string">&quot;world&quot;</span><br>2) <span class="hljs-string">&quot;hello&quot;</span><br>127.0.0.1:6379&gt; SMEMBERS myset2<br>1) <span class="hljs-string">&quot;ks&quot;</span><br>2) <span class="hljs-string">&quot;set2&quot;</span><br><br><span class="hljs-comment">##############################################</span><br><br>127.0.0.1:6379&gt; sadd key1 a<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd key1 b<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd key1 c<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd key2 c<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd key2 d<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd key2 e<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sdiff key1 key2		<span class="hljs-comment">#差集</span><br>1) <span class="hljs-string">&quot;b&quot;</span><br>2) <span class="hljs-string">&quot;a&quot;</span><br>127.0.0.1:6379&gt; sinter key1 key2	<span class="hljs-comment">#交集</span><br>1) <span class="hljs-string">&quot;c&quot;</span><br>127.0.0.1:6379&gt; sunion key1 key2	<span class="hljs-comment">#并集</span><br>1) <span class="hljs-string">&quot;b&quot;</span><br>2) <span class="hljs-string">&quot;c&quot;</span><br>3) <span class="hljs-string">&quot;d&quot;</span><br>4) <span class="hljs-string">&quot;a&quot;</span><br>5) <span class="hljs-string">&quot;e&quot;</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><p>map集合，key-Map集合</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; hset myhash field1 czh<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; hget myhash field1<br><span class="hljs-string">&quot;czh&quot;</span><br>127.0.0.1:6379&gt; hmset myhash field1 hello field2 world	<span class="hljs-comment">#set多个key-value</span><br>OK<br>127.0.0.1:6379&gt; hmget myhash field1 field2	<span class="hljs-comment">#获取多个字段值</span><br>1) <span class="hljs-string">&quot;hello&quot;</span><br>2) <span class="hljs-string">&quot;world&quot;</span><br>127.0.0.1:6379&gt; hgetall myhash	<span class="hljs-comment"># 获取全部的数据</span><br>1) <span class="hljs-string">&quot;field1&quot;</span><br>2) <span class="hljs-string">&quot;hello&quot;</span><br>3) <span class="hljs-string">&quot;field2&quot;</span><br>4) <span class="hljs-string">&quot;world&quot;</span><br>127.0.0.1:6379&gt; HDEL myhash field1	<span class="hljs-comment">#删除hash指定的key</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; HGETALL myhash<br>1) <span class="hljs-string">&quot;field2&quot;</span><br>2) <span class="hljs-string">&quot;world&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>hlen<br><br>127.0.0.1:6379&gt; hmset myhash field1 hello field2 world<br>OK<br>127.0.0.1:6379&gt; HGETALL myhash<br>1) <span class="hljs-string">&quot;field1&quot;</span><br>2) <span class="hljs-string">&quot;hello&quot;</span><br>3) <span class="hljs-string">&quot;field2&quot;</span><br>4) <span class="hljs-string">&quot;world&quot;</span><br>127.0.0.1:6379&gt; hlen myhash<br>(<span class="hljs-built_in">integer</span>) 2<br><br><span class="hljs-comment">##############################################</span><br>127.0.0.1:6379&gt; HEXISTS myhash field1	<span class="hljs-comment">#判断hash中指定字段是否存在</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; HEXISTS myhash field3<br>(<span class="hljs-built_in">integer</span>) 0<br><br><span class="hljs-comment">##############################################</span><br><span class="hljs-comment"># 只获得所有field</span><br><span class="hljs-comment"># 只获得所有value</span><br>127.0.0.1:6379&gt; hkeys myhash<br>1) <span class="hljs-string">&quot;field1&quot;</span><br>2) <span class="hljs-string">&quot;field2&quot;</span><br>127.0.0.1:6379&gt; HVALS myhash<br>1) <span class="hljs-string">&quot;hello&quot;</span><br>2) <span class="hljs-string">&quot;world&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>incr<br><br>127.0.0.1:6379&gt; hset myhash field3 5<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; hincrby myhash field3 1<br>(<span class="hljs-built_in">integer</span>) 6<br>127.0.0.1:6379&gt; HINCRBY myhash field3 -1<br>(<span class="hljs-built_in">integer</span>) 5<br>127.0.0.1:6379&gt; HSETNX myhash field4 hello	<span class="hljs-comment">#不存在则设置</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; hsetnx myhash field4 world	<span class="hljs-comment">#存在则不设置</span><br>(<span class="hljs-built_in">integer</span>) 0<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Zset（有序集合）"><a href="#Zset（有序集合）" class="headerlink" title="Zset（有序集合）"></a>Zset（有序集合）</h3><p>在set基础上增加了一个值，score</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; zadd myset 1 one<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zadd myset 2 two 3 three<br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; zrange myset 0 -1<br>1) <span class="hljs-string">&quot;one&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>3) <span class="hljs-string">&quot;three&quot;</span><br><br><span class="hljs-comment">##############################################</span><br>排序如何实现<br><br>127.0.0.1:6379&gt; zadd salary 2500 xiaohong<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zadd salary 5000 zhangsan<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zadd salary 500 ks<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf +inf	<span class="hljs-comment">#从小到大显示所有数据</span><br>1) <span class="hljs-string">&quot;ks&quot;</span><br>2) <span class="hljs-string">&quot;xiaohong&quot;</span><br>3) <span class="hljs-string">&quot;zhangsan&quot;</span><br>127.0.0.1:6379&gt; zrange salary 0 -1<br>1) <span class="hljs-string">&quot;ks&quot;</span><br>2) <span class="hljs-string">&quot;xiaohong&quot;</span><br>3) <span class="hljs-string">&quot;zhangsan&quot;</span><br>127.0.0.1:6379&gt; zrangebyscore salary -inf +inf withscores	<span class="hljs-comment"># 显示全部的value并附带score</span><br>1) <span class="hljs-string">&quot;ks&quot;</span><br>2) <span class="hljs-string">&quot;500&quot;</span><br>3) <span class="hljs-string">&quot;xiaohong&quot;</span><br>4) <span class="hljs-string">&quot;2500&quot;</span><br>5) <span class="hljs-string">&quot;zhangsan&quot;</span><br>6) <span class="hljs-string">&quot;5000&quot;</span><br>127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf 2500 withscores<br>1) <span class="hljs-string">&quot;ks&quot;</span><br>2) <span class="hljs-string">&quot;500&quot;</span><br>3) <span class="hljs-string">&quot;xiaohong&quot;</span><br>4) <span class="hljs-string">&quot;2500&quot;</span><br>127.0.0.1:6379&gt; ZREVRANGE salary 0 -1<br>1) <span class="hljs-string">&quot;zhangsan&quot;</span><br>2) <span class="hljs-string">&quot;ks&quot;</span><br><br><span class="hljs-comment">##############################################</span><br><span class="hljs-comment"># rem移除元素</span><br><br>127.0.0.1:6379&gt; zrem salary xiaohong	<span class="hljs-comment">#移除有序集合中的指定元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zrange salary 0 -1<br>1) <span class="hljs-string">&quot;ks&quot;</span><br>2) <span class="hljs-string">&quot;zhangsan&quot;</span><br>127.0.0.1:6379&gt; ZCARD salary	<span class="hljs-comment">#获取有序集合中元素的个数</span><br>(<span class="hljs-built_in">integer</span>) 2<br><br><span class="hljs-comment">##############################################</span><br>127.0.0.1:6379&gt; zadd myset 1 hello<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zadd myset 2 world<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zadd myset 3 czh<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zcount myset 1 3	<span class="hljs-comment">#获取指定区间的成员数量</span><br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; zcount myset 1 2<br>(<span class="hljs-built_in">integer</span>) 2<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="三种特殊数据类型"><a href="#三种特殊数据类型" class="headerlink" title="三种特殊数据类型"></a>三种特殊数据类型</h2><h3 id="Geospatial-地理位置"><a href="#Geospatial-地理位置" class="headerlink" title="Geospatial 地理位置"></a>Geospatial 地理位置</h3><p>6个命令</p>
+<blockquote>
+<p>geoadd</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 添加地理位置</span><br><span class="hljs-comment"># 参数 key 值（经度、纬度、名称）</span><br>127.0.0.1:6379&gt; GEOADD china:city 116.40 39.90 beijing<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; geoadd china:city 121.47 31.23 shanghai<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; geoadd china:city 106.50 29.53 chongqing<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; geoadd china:city 120.16 30.24 hangzhou 108.96 34.26 xian<br>(<span class="hljs-built_in">integer</span>) 2<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>geopos</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; geopos china:city beijing	<span class="hljs-comment">#获取指定城市的经度和纬度</span><br>1) 1) <span class="hljs-string">&quot;116.39999896287918&quot;</span><br>   2) <span class="hljs-string">&quot;39.900000091670925&quot;</span><br>127.0.0.1:6379&gt; geopos china:city beijing chongqing<br>1) 1) <span class="hljs-string">&quot;116.39999896287918&quot;</span><br>   2) <span class="hljs-string">&quot;39.900000091670925&quot;</span><br>2) 1) <span class="hljs-string">&quot;106.49999767541885&quot;</span><br>   2) <span class="hljs-string">&quot;29.529999579006592&quot;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>geodist（返回两个给定位置之间的距离）</p>
+</blockquote>
+<p>单位：</p>
+<ul>
+<li>m表示米</li>
+<li>km表示单位为千米</li>
+<li>mi表示单位为英里</li>
+<li>ft表示单位为英尺</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; geodist china:city beijing shanghai	<span class="hljs-comment">#查看北京到上海的距离</span><br><span class="hljs-string">&quot;1067378.7564&quot;</span><br>127.0.0.1:6379&gt; geodist china:city beijing shanghai km<br><span class="hljs-string">&quot;1067.3788&quot;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>georadius 以给定的经纬度为中心，找出某一半径内的元素</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; GEORADIUS china:city 110 30 1000 km	<span class="hljs-comment"># 以110，30这个经纬度为中心，寻找方圆1000km内的城市</span><br>1) <span class="hljs-string">&quot;chongqing&quot;</span><br>2) <span class="hljs-string">&quot;xian&quot;</span><br>3) <span class="hljs-string">&quot;hangzhou&quot;</span><br>127.0.0.1:6379&gt; GEORADIUS china:city 110 30 500 km<br>1) <span class="hljs-string">&quot;chongqing&quot;</span><br>2) <span class="hljs-string">&quot;xian&quot;</span><br>127.0.0.1:6379&gt; georadius china:city 110 30 500 km withdist	<span class="hljs-comment"># 显示到中间距离的位置</span><br>1) 1) <span class="hljs-string">&quot;chongqing&quot;</span><br>   2) <span class="hljs-string">&quot;341.9374&quot;</span><br>2) 1) <span class="hljs-string">&quot;xian&quot;</span><br>   2) <span class="hljs-string">&quot;483.8340&quot;</span><br>127.0.0.1:6379&gt; georadius china:city 110 30 500 km withcoord	<span class="hljs-comment"># 显示他人的定位信息</span><br>1) 1) <span class="hljs-string">&quot;chongqing&quot;</span><br>   2) 1) <span class="hljs-string">&quot;106.49999767541885&quot;</span><br>      2) <span class="hljs-string">&quot;29.529999579006592&quot;</span><br>2) 1) <span class="hljs-string">&quot;xian&quot;</span><br>   2) 1) <span class="hljs-string">&quot;108.96000176668167&quot;</span><br>      2) <span class="hljs-string">&quot;34.2599996441893&quot;</span><br>127.0.0.1:6379&gt; georadius china:city 110 30 500 km withcoord count 1	<span class="hljs-comment"># count查询的个数</span><br>1) 1) <span class="hljs-string">&quot;chongqing&quot;</span><br>   2) 1) <span class="hljs-string">&quot;106.49999767541885&quot;</span><br>      2) <span class="hljs-string">&quot;29.529999579006592&quot;</span><br>127.0.0.1:6379&gt; georadius china:city 110 30 500 km withcoord count 2<br>1) 1) <span class="hljs-string">&quot;chongqing&quot;</span><br>   2) 1) <span class="hljs-string">&quot;106.49999767541885&quot;</span><br>      2) <span class="hljs-string">&quot;29.529999579006592&quot;</span><br>2) 1) <span class="hljs-string">&quot;xian&quot;</span><br>   2) 1) <span class="hljs-string">&quot;108.96000176668167&quot;</span><br>      2) <span class="hljs-string">&quot;34.2599996441893&quot;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>georadiusbymember 找出位于指定范围内的元素，中心点是由给定的位置元素决定</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city beijing 1000 km<br>1) <span class="hljs-string">&quot;beijing&quot;</span><br>2) <span class="hljs-string">&quot;xian&quot;</span><br>127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city shanghai 400 km<br>1) <span class="hljs-string">&quot;hangzhou&quot;</span><br>2) <span class="hljs-string">&quot;shanghai&quot;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>geohash 返回一个或多个位置元素的Geohash表示</p>
+</blockquote>
+<p>该命令将返回11个字符的Geohash字符串</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将二维的经纬度转换为一维的字符串，如果两个字符串越接近，那么则距离越近</span><br>127.0.0.1:6379&gt; geohash china:city beijing chongqing<br>1) <span class="hljs-string">&quot;wx4fbxxfke0&quot;</span><br>2) <span class="hljs-string">&quot;wm5xzrybty0&quot;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>geo底层的实现原理其实就是Zset！可以使用Zset命令来操作geo</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; ZRANGE china:city 0 -1	<span class="hljs-comment"># 查看地图中全部的元素</span><br>1) <span class="hljs-string">&quot;chongqing&quot;</span><br>2) <span class="hljs-string">&quot;xian&quot;</span><br>3) <span class="hljs-string">&quot;hangzhou&quot;</span><br>4) <span class="hljs-string">&quot;shanghai&quot;</span><br>5) <span class="hljs-string">&quot;beijing&quot;</span><br>127.0.0.1:6379&gt; zrem china:city beijing	<span class="hljs-comment"># 移除指定元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zrange china:city 0 -1<br>1) <span class="hljs-string">&quot;chongqing&quot;</span><br>2) <span class="hljs-string">&quot;xian&quot;</span><br>3) <span class="hljs-string">&quot;hangzhou&quot;</span><br>4) <span class="hljs-string">&quot;shanghai&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Hyperloglogs"><a href="#Hyperloglogs" class="headerlink" title="Hyperloglogs"></a>Hyperloglogs</h3><blockquote>
+<p>什么是基数？</p>
+</blockquote>
+<p>A{1,3,5,7,8,7}</p>
+<p>B{1,3,5,7,8}</p>
+<p>基数（去重后元素的个数） = 5</p>
+<p>Redis Hyperloglog基数统计的算法。</p>
+<p>优点：占用的内存是固定的，2^64不同的元素的技术，只需要废12KB内存。如果要从内存角度来比较的话Hyperloglog首选。</p>
+<p><strong>网页的UV（一个人访问一个网站多次，但是还是算作一个人）</strong></p>
+<p>传统的方式，set保存用户的id，然后就可以统计set中的元素数量作为标准判断。</p>
+<p>这个方式如果保存大量的用户id，就会比较麻烦，我们的目的是为了计数，而不是保存用户的id。存在0.81%错误率，但是统计UV任务，可以忽略不计。</p>
+<blockquote>
+<p>测试使用</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; PFADD mykey a b c d e f g h i j	<span class="hljs-comment"># 创建第一组元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; PFCOUNT mykey	<span class="hljs-comment"># 统计 mykey 元素的基数数量</span><br>(<span class="hljs-built_in">integer</span>) 10<br>127.0.0.1:6379&gt; PFADD mykey2 i j z x c v b n m	<span class="hljs-comment"># 创建第二组元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; PFCOUNT mykey2<br>(<span class="hljs-built_in">integer</span>) 9<br>127.0.0.1:6379&gt; PFMERGE mykey3 mykey mykey2	<span class="hljs-comment"># 合并两组 mykey mykey2 =&gt; mykey3 并集</span><br>OK<br>127.0.0.1:6379&gt; PFCOUNT mykey3<br>(<span class="hljs-built_in">integer</span>) 15<br></code></pre></td></tr></table></figure>
+
+<p>如果允许容错，那么一定可以使用Hyperloglog</p>
+<p>如果不允许容错，就使用set或者自己的数据类型即可</p>
+<h3 id="Bitmaps"><a href="#Bitmaps" class="headerlink" title="Bitmaps"></a>Bitmaps</h3><blockquote>
+<p>位存储</p>
+</blockquote>
+<p>Bitmaps位图，操作二进制位来进行记录，只有0和1两个状态。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; SETBIT sign 0 1<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; setbit sign 1 0<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; setbit sign 2 0<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; setbit sign 3 1<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; setbit sign 4 1<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; setbit sign 5 0<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; setbit sign 6 0<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; getbit sign 3<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; getbit sign 6<br>(<span class="hljs-built_in">integer</span>) 0<br>127.0.0.1:6379&gt; BITCOUNT sign<br>(<span class="hljs-built_in">integer</span>) 3<br></code></pre></td></tr></table></figure>
+
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>Redis单条命令是保存原子性的，但是事务不保证原子性</p>
+<p>所有的命令在事务中并没有直接被执行，只有发起执行命令的时候才会执行。</p>
+<p>redis的事务：</p>
+<ul>
+<li>开启事务（multi）</li>
+<li>命令入队（…）</li>
+<li>执行事务（exec）</li>
+</ul>
+<blockquote>
+<p>正常执行事务</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; multi	<span class="hljs-comment"># 开启事务</span><br>OK<br><span class="hljs-comment"># 命令入队</span><br>127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> k1 v1<br>QUEUED<br>127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> k2 v2<br>QUEUED<br>127.0.0.1:6379&gt; get k2<br>QUEUED<br>127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> k3 v3<br>QUEUED<br>127.0.0.1:6379&gt; <span class="hljs-built_in">exec</span>	<span class="hljs-comment"># 执行事务</span><br>1) OK<br>2) OK<br>3) <span class="hljs-string">&quot;v2&quot;</span><br>4) OK<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>放弃事务</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; multi	<span class="hljs-comment">#开启事务</span><br>OK<br>127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> k1 v1<br>QUEUED<br>127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> k2 v2<br>QUEUED<br>127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> k4 v4<br>QUEUED<br>127.0.0.1:6379&gt; discard	<span class="hljs-comment">#取消事务</span><br>OK<br>127.0.0.1:6379&gt; get k4<br>(nil)<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>编译型异常（代码有问题，命令有错），事务中所有的命令都不会被执行</p>
+</blockquote>
+<blockquote>
+<p>运行时异常（1/0），如果事务队列中存在语法性错误，那么执行命令的时候，其他命令是可以正常执行的</p>
+</blockquote>
+<p><strong>悲观锁：</strong></p>
+<ul>
+<li>很悲观，认为什么时候都会出问题，无论做什么都会加锁</li>
+</ul>
+<p><strong>乐观锁：</strong></p>
+<ul>
+<li>很乐观，认为什么时候都不会出问题，所以不会上锁，更新数据的时候去判断一下，在此期间是否有人修改过这个数据。</li>
+<li>获取version</li>
+<li>更新的时候比较version</li>
+</ul>
+<blockquote>
+<p>Redis监视测试</p>
+</blockquote>
+<p>正常执行成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> money 100<br>OK<br>127.0.0.1:6379&gt; <span class="hljs-built_in">set</span> out 0<br>OK<br>127.0.0.1:6379&gt; watch money	<span class="hljs-comment"># 监视money对象</span><br>OK<br>127.0.0.1:6379&gt; multi	<span class="hljs-comment"># 事务正常结束，数据期间没有发生变动</span><br>OK<br>127.0.0.1:6379&gt; DECRBY money 20<br>QUEUED<br>127.0.0.1:6379&gt; INCRBY out 20<br>QUEUED<br>127.0.0.1:6379&gt; <span class="hljs-built_in">exec</span><br>1) (<span class="hljs-built_in">integer</span>) 80<br>2) (<span class="hljs-built_in">integer</span>) 20<br></code></pre></td></tr></table></figure>
+
+<p>执行事务时若watch到money发生改变，则此事务会执行失败。</p>
+<p>使用watch可以当作redis的乐观锁操作。</p>
+<h2 id="Jedis"><a href="#Jedis" class="headerlink" title="Jedis"></a>Jedis</h2><p>使用Java操作Redis</p>
+<p>1.导入对应的依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>redis.clients<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jedis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.3.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>fastjson<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.2.76<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.编码测试：</p>
+<ul>
+<li><p>连接数据库</p>
+</li>
+<li><p>操作命令</p>
+</li>
+<li><p>断开连接</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestPing</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <span class="hljs-comment">//1.new jedis对象</span><br>        Jedis jedis = <span class="hljs-keyword">new</span> Jedis(<span class="hljs-string">&quot;127.0.0.1&quot;</span>, <span class="hljs-number">6379</span>);<br>        <span class="hljs-comment">//jedis所有的命令就是redis的所有命令</span><br>        System.out.println(jedis.ping());<span class="hljs-comment">//输出PONG</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="SpringBoot整合"><a href="#SpringBoot整合" class="headerlink" title="SpringBoot整合"></a>SpringBoot整合</h2><p>SpringBoot2.x之后，原来使用的jedis被替换为了lettuce</p>
+<p>jedis：采用的直连，多个线程操作的话是不安全的，如果想要避免不安全的，使用jedis pool连接池。</p>
+<p>lettuce：采用netty，实例可以在多个线程中进行共享，不存在线程不安全的情况。</p>
+<blockquote>
+<p>整合</p>
+</blockquote>
+<p>1.导入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.配置连接</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">redis:</span><br>    <span class="hljs-attr">host:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br></code></pre></td></tr></table></figure>
+
+<p>3.测试</p>
+<h2 id="Redis-conf详解"><a href="#Redis-conf详解" class="headerlink" title="Redis.conf详解"></a>Redis.conf详解</h2><blockquote>
+<p>包含</p>
+</blockquote>
+<p><img src="/2021/08/09/Redis/image-20210720180203714.png" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>网络</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">bind</span> 127.0.0.1	<span class="hljs-comment">#绑定的ip</span><br>protected-mode yes	<span class="hljs-comment">#保护模式</span><br>port 6379	<span class="hljs-comment">#端口设置</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通用 GENERAL</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">daemonize yes	<span class="hljs-comment"># 以守护进程的方式运行，默认是no，我们需要自己开启为yes</span><br><br>pidfile /var/run/redis.pid	<span class="hljs-comment"># 如果以后台的方式运行，就需要指定一个pid文件</span><br><br><span class="hljs-comment">#日志</span><br><span class="hljs-comment"># Specify the server verbosity level.</span><br><span class="hljs-comment"># This can be one of:</span><br><span class="hljs-comment"># debug (a lot of information, useful for development/testing)</span><br><span class="hljs-comment"># verbose (many rarely useful info, but not a mess like the debug level)</span><br><span class="hljs-comment"># notice (moderately verbose, what you want in production probably)</span><br><span class="hljs-comment"># warning (only very important / critical messages are logged)</span><br>loglevel notice<br>logfile <span class="hljs-string">&quot;&quot;</span>	<span class="hljs-comment">#日志的文件位置名</span><br>databases 16 <span class="hljs-comment">#数据库的数量，默认是 16 个数据库</span><br>always-show-logo yes <span class="hljs-comment"># 是否总是显示LOGO</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>快照 SNAPSHOTTING</p>
+</blockquote>
+<p>持久化，在规定的时间内，执行了多少次操作，则会持久化到文件<code>.rdb</code> <code>.aof</code></p>
+<p>redis是内存数据库，如果没有持久化，那么数据断电即失！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#如果900秒内，如果至少有一个key进行了修改，就进行持久化操作</span><br>save 900 1<br><span class="hljs-comment">#如果300s内，如果至少10 key进行了修改，就进行持久化操作</span><br>save 300 10<br><span class="hljs-comment">#如果60s内，如果至少10000 key进行了修改，就进行持久化操作</span><br>save 60 10000<br><br>stop-writes-on-bgsave-error yes <span class="hljs-comment">#持久化如果出错，是否还需要继续工作</span><br><br>rdbcompression yes <span class="hljs-comment">#默认值是yes。对于存储到磁盘中的快照，可以设置是否进行压缩存储。</span><br><br>rdbchecksum yes <span class="hljs-comment">#默认值是yes。在存储快照后，我们还可以让redis使用CRC64算法来进行数据校验，但是这样做会增加大约10%的性能消耗，如果希望获取到最大的性能提升，可以关闭此功能。</span><br><br>dir ./ <span class="hljs-comment"># rdb文件保存的目录</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>主从复制 REPLICATION</p>
+</blockquote>
+<blockquote>
+<p>SECURITY</p>
+</blockquote>
+<p>可以为redis设置密码，默认没有密码</p>
+<p><code>config get requirepass</code> 获取redis密码</p>
+<p><code>config set requirepass &quot;123456&quot;</code> 设置redis密码</p>
+<p><code>auth 123456</code> 使用密码进行登录</p>
+<blockquote>
+<p>限制 LIMITS</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs bash">maxClients 10000 <span class="hljs-comment">#设置能连接上redis的最大客户端的数量</span><br>maxmemory &lt;bytes&gt; <span class="hljs-comment">#redis 配置最大的内存容量</span><br><br>maxmemory-policy noeviction <span class="hljs-comment">#内存达到上限之后的处理策略</span><br>    1.volatile-lru -&gt; remove the key with an expire <span class="hljs-built_in">set</span> using an LRU algorithm<br>    只对设置了过期时间的key进行LRU<br>    2.allkeys-lru -&gt; remove any key according to the LRU algorithm<br>    删除LRU算法的key<br>    3.volatile-random -&gt; remove a random key with an expire <span class="hljs-built_in">set</span><br>    随机删除即将过期的key<br>    4.allkeys-random -&gt; remove a random key, any key<br>    随机删除key<br>    5.volatile-ttl -&gt; remove the key with the nearest expire time (minor TTL)<br>    删除即将过期的key<br>    6.noeviction -&gt; don<span class="hljs-string">&#x27;t expire at all, just return an error on write operations</span><br><span class="hljs-string">    永不过期，返回错误</span><br><span class="hljs-string"></span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>AOF配置 APPEND ONLY MODE</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">appendonly no <span class="hljs-comment">#默认不开启aof模式，默认是使用rdb方式持久化的，在大部分的情况下，rdb完全够用</span><br><br>appendfilename <span class="hljs-string">&quot;appendonly.aof&quot;</span> <span class="hljs-comment"># 持久化的文件的名字</span><br><br><span class="hljs-comment"># appendfsync always #每次修改都会 sync，消耗性能</span><br>appendfsync everysec <span class="hljs-comment">#每秒执行一次 sync</span><br><span class="hljs-comment"># appendfsync no	 #不执行 sync(同步)，操作系统自己同步数据，速度最快</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2><p>Redis是内存数据库，如果不将内存中的数据库保存到磁盘，那么一旦服务器进程退出，服务器中的数据库状态也会消失。所以Redis提供了持久化功能。</p>
+<h3 id="RDB-Redis-Database"><a href="#RDB-Redis-Database" class="headerlink" title="RDB(Redis Database)"></a>RDB(Redis Database)</h3><p>在指定的时间间隔内将内存中的数据集快照(SnapShot)写入磁盘，它恢复时将快照文件直接读到内存中。</p>
+<p>Redis会单独创建(fork)一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。整个过程中，主进程不进行任何IO操作的，这就确保了极高的性能。如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那么RDB方式比AOF方式更加高效。RDB的缺点是最后一次持久化后的数据可能丢失。</p>
+<p>rdb保存的文件是dump.rdb，在配置文件中<code>SNAPSHOTTING</code>部分进行了配置。<code>dbfilename dump.rdb</code></p>
+<h4 id="1-RDB生成快照保存的三种触发方式"><a href="#1-RDB生成快照保存的三种触发方式" class="headerlink" title="1.RDB生成快照保存的三种触发方式"></a>1.RDB生成快照保存的三种触发方式</h4><ol>
+<li><p><strong>save触发方式</strong></p>
+<p>该命令会阻塞当前的Redis服务器，执行save命令期间，Redis不能处理其他命令，直到RDB过程完成为止。执行完成的时候如果存在老的RDB文件，就把新的替代掉旧的。如果客户端多达几万或几十万，那么这种方式显然不可取。</p>
+</li>
+<li><p><strong>bgsave触发方式</strong>（bg即backgroud，后台）</p>
+<p>执行该命令时，Redis会在后台异步进行快照操作，快照同时还可以响应客户端请求。</p>
+<p>具体操作为Redis进程执行fork操作创建子进程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短。基本上Redis内部所有的RDB操作都是采用bgsave命令。</p>
+</li>
+<li><p><strong>自动触发</strong></p>
+<p>自动触发是由我们的配置文件来完成的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">save 900 1<br>save 300 10<br>save 60 10000<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="2-save与bgsave对比"><a href="#2-save与bgsave对比" class="headerlink" title="2.save与bgsave对比"></a>2.save与bgsave对比</h4><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>save</th>
+<th>bgsave</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IO类型</td>
+<td>同步</td>
+<td>异步</td>
+</tr>
+<tr>
+<td>阻塞</td>
+<td>是</td>
+<td>是（发生在fork）</td>
+</tr>
+<tr>
+<td>复杂度</td>
+<td>O(n)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>不会消耗额外内存</td>
+<td>不阻塞客户端命令</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>阻塞客户端命令</td>
+<td>需要fork，消耗内存</td>
+</tr>
+</tbody></table>
+<h4 id="3-RDB的优点和缺点"><a href="#3-RDB的优点和缺点" class="headerlink" title="3.RDB的优点和缺点"></a>3.RDB的优点和缺点</h4><p>优点：</p>
+<ol>
+<li>RDB文件紧凑，全量备份，非常适合用于进行备份和灾难恢复。</li>
+<li>生成RDB文件的时候，redis主进程会fork()一个子进程来处理所有保存工作，主进程不需要进行任何磁盘IO操作。</li>
+<li>RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。</li>
+</ol>
+<p>缺点：</p>
+<p>​    RDB快照是一次全量备份，存储的是内存数据的二进制序列化形式，存储上非常紧凑。当进行快照持久化时，会开启一个子进程专门负责快照持久化，子进程会拥有父进程的内存数据，父进程修改内存子进程不会反应出来，所以在快照持久化期间修改的数据不会被保存，可能丢失数据。</p>
+<h3 id="AOF-Append-Only-File"><a href="#AOF-Append-Only-File" class="headerlink" title="AOF(Append Only File)"></a>AOF(Append Only File)</h3><p>全量备份总是耗时的，有时候我们提供一种更加高效的方式AOF，工作机制很简单，redis会将每一个收到的写命令都通过write函数追加到文件中。通俗的理解就是日志记录。</p>
+<p>以日志的形式来记录每个写操作，将Redis执行过的所有指令记录下来（读操作不记录），只许追加记录不可以修改记录，redis启动之初会读取该文件重新构建数据。</p>
+<p>aof保存的是appendonly.aof文件。</p>
+<p>如果aof文件有错误，此时redis是无法启动的，需要修复aof文件</p>
+<p>redis提供了一个工具<code>redis-check-aof</code></p>
+<h4 id="1-文件重写原理"><a href="#1-文件重写原理" class="headerlink" title="1.文件重写原理"></a>1.文件重写原理</h4><p>AOF的方式也同时带来了另一个问题。持久化文件会变的越来越大。为了压缩aof的持久化文件。redis提供了bgrewriteaof命令。将内存中的数据以命令的方式保存到临时文件中，同时会fork出一条新进程来将文件重写。</p>
+<p><img src="/2021/08/09/Redis/%E6%96%87%E4%BB%B6%E9%87%8D%E5%86%99%E5%8E%9F%E7%90%86.jpeg" srcset="/img/loading.gif" lazyload alt="文件重写原理"></p>
+<p>重写aof文件的操作，并没有读取旧的aof文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件，这点和快照有点类似。</p>
+<h4 id="2-AOF三种触发机制"><a href="#2-AOF三种触发机制" class="headerlink" title="2.AOF三种触发机制"></a>2.AOF三种触发机制</h4><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>always</th>
+<th>everysec</th>
+<th>no</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>优点</td>
+<td>不丢失数据</td>
+<td>每秒一次sync丢一秒数据</td>
+<td>不用管</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>IO开销较大</td>
+<td>丢一秒数据</td>
+<td>不可控</td>
+</tr>
+</tbody></table>
+<h4 id="3-AOF的优点和缺点"><a href="#3-AOF的优点和缺点" class="headerlink" title="3.AOF的优点和缺点"></a>3.AOF的优点和缺点</h4><p>优点：</p>
+<ol>
+<li>AOF可以更好的保护数据不丢失，一般AOF会每隔1秒，通过一个后台线程执行一次fsync操作，最多丢失1秒钟的数据。</li>
+<li>AOF日志文件没有任何磁盘寻址的开销，写入性能非常高，文件不容易破损。</li>
+<li>AOF日志文件即使过大的时候，出现后台重写操作，也不会影响客户端的读写。</li>
+<li>AOF日志文件的命令通过非常可读的方式进行记录，这个特性非常适合做灾难性的误删除的紧急恢复。比如某人不小心用flushall命令清空了所有数据，只要这个时候后台rewrite还没有发生，那么就可以立即拷贝AOF文件，将最后一条flushall命令给删了，然后再将该AOF文件放回去，就可以通过恢复机制，自动恢复所有数据</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>对于同一份数据来说，AOF日志文件通常比RDB数据快照文件更大。</li>
+<li>AOF运行效率比RDB慢。</li>
+</ol>
+<h2 id="Redis发布订阅"><a href="#Redis发布订阅" class="headerlink" title="Redis发布订阅"></a>Redis发布订阅</h2><p>Redis发布订阅(pub/sub)是一种<font color="#FF0000">消息通信模式</font>：发送者(pub)发送消息，订阅者(sub)接收消息。</p>
+<p>Redis 客户端可以订阅任意数量的频道。</p>
+<p>下图展示了频道 channel1 ， 以及订阅这个频道的三个客户端 —— client2 、 client5 和 client1 之间的关系：</p>
+<p><img src="/2021/08/09/Redis/pubsub1.png" srcset="/img/loading.gif" lazyload></p>
+<p>当有新消息通过 PUBLISH 命令发送给频道 channel1 时， 这个消息就会被发送给订阅它的三个客户端：</p>
+<p><img src="/2021/08/09/Redis/pubsub2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/09/Redis/image-20210721134621524.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>使用场景：</strong></p>
+<ol>
+<li>实时消息系统</li>
+<li>实时聊天</li>
+<li>订阅</li>
+</ol>
+<p>稍微复杂的场景会使用消息中间件MQ</p>
+<h2 id="Redis主从复制"><a href="#Redis主从复制" class="headerlink" title="Redis主从复制"></a>Redis主从复制</h2><p>概念</p>
+<p>主从复制，是指将一台Redis服务器的数据，复制到其他的Redis服务器。前者称为主节点（master/leader），后者称为从节点（slave/follower）；数据的复制是单向的，只能从主节点到从节点。Master以写为主，Slave以读为主。</p>
+<p>默认情况下，每台Redis服务器都是主节点；且一个主节点可以有多个从节点（或没有从节点），但一个从节点只能有一个主节点。</p>
+<p>主从复制的作用主要包括：</p>
+<ol>
+<li>数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。</li>
+<li>故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复；实际上是一种服务的冗余。</li>
+<li>负载均衡：在主从复制的基础上，配合读写分离，可以由主节点提供写服务，由从节点提供读服务（即写Redis数据时应用连接主节点，读Redis数据时应用连接从节点），分担服务器负载；尤其是在写少读多的场景下，通过多个从节点分担读负载，可以大大提高Redis服务器的并发量。</li>
+<li>高可用基础：除了上述作用以外，主从复制还是哨兵和集群能够实施的基础，因此说主从复制是Redis高可用的基础。</li>
+</ol>
+<p>一般来说，要将Redis运用于工程项目中，只使用一台Redis是万万不能的，原因如下：</p>
+<ol>
+<li>从结构上，单个Redis服务器会发生单点故障，并且一台服务器需要处理所有的请求负载，压力较大。</li>
+<li>从容量上，单个Redis服务器内存容量有限，就算一台Redis服务器内存容量为256G，也不能将所有内存用作Redis存储内存，一般来说，单台Redis最大使用内存应该不超过20G。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; info replication<br><span class="hljs-comment"># Replication</span><br>role:master <span class="hljs-comment"># 角色 master</span><br>connected_slaves:0 <span class="hljs-comment"># 没有从机</span><br>master_repl_offset:0<br>repl_backlog_active:0<br>repl_backlog_size:1048576<br>repl_backlog_first_byte_offset:0<br>repl_backlog_histlen:0<br></code></pre></td></tr></table></figure>
+
+<p>设置从机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#设置从机</span><br>SLAVEOF ip port <span class="hljs-comment">#设置哪个redis作为主机</span><br></code></pre></td></tr></table></figure>
+
+<p>使用命令设置主从机只是暂时的，在配置文件中配置是永久的。</p>
+<p><img src="/2021/08/09/Redis/image-20210721144531883.png" srcset="/img/loading.gif" lazyload></p>
+<p>主机可以写，从机不能写只能读。主机中的所有信息和数据，都会自动被从机保存。</p>
+<blockquote>
+<p>复制原理</p>
+</blockquote>
+<p>Slave启动成功连接到master后会发送一个sync同步命令</p>
+<p>Master接到命令，启动后台的存盘进程，同时收集所有接收到的用于修改数据集的命令，在后台进程执行完毕之后，master将传送整个数据文件到slave，并完成一次完全同步。</p>
+<p>全量复制：slave服务在接收到数据库文件数据后，将其存盘并加载到内存中。</p>
+<p>增量复制：master继续将新的所有收集到的修改命令依次传给slave，完成同步。</p>
+<p>只要是重新连接master，一次完全同步（全量复制）将被自动执行。</p>
+<p>**如果主机断开了连接，我们可以使用<code>SLAVEOF no one</code>**让自己变成主机，其他节点就可以手动连接到最新的这个主节点。</p>
+<h2 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a>哨兵模式</h2><p>自动选择主节点</p>
+<blockquote>
+<p>概述</p>
+</blockquote>
+<p>主从切换技术的方法是：当主服务器宕机后，需要手动把一台从服务器切换为主服务器，这就需要人工干预，费时费力，还会造成一段时间内服务不可用。这不是一种推荐的方式，更多时候，需要优先考虑哨兵模式。Redis从2.8开始正式提供了Sentinel（哨兵）架构来解决这个问题。</p>
+<p>哨兵模式是一种特殊的模式，首先Redis提供了哨兵的命令，哨兵是一个独立的进程，作为进程，它会独立运行。其原理是<strong>哨兵通过发送命令，等待Redis服务器响应，从而监控运行的多个Redis实例。</strong></p>
+<p><img src="/2021/08/09/Redis/11320039-57a77ca2757d0924.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/09/Redis/11320039-3f40b17c0412116c.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>故障切换（failover）</strong>的过程：假设主服务器宕机，哨兵1先检测到这个结果，系统并不会马上进行failover过程，仅仅是哨兵1主观的认为主服务器不可用，这个现象成为<strong>主观下线</strong>。当后面的哨兵也检测到主服务器不可用，并且数量达到一定值时，那么哨兵之间就会进行一次投票，投票的结果由一个哨兵发起，进行failover操作。切换成功后，就会通过发布订阅模式，让各个哨兵把自己监控的从服务器实现切换主机，这个过程称为<strong>客观下线</strong>。这样对于客户端而言，一切都是透明的。</p>
+<blockquote>
+<p>哨兵模式配置项</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>参数类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>port</td>
+<td>整数</td>
+<td>启动哨兵进程端口</td>
+</tr>
+<tr>
+<td>dir</td>
+<td>文件夹目录</td>
+<td>哨兵进程服务临时文件夹，默认为/tmp，要保证有可写入的权限</td>
+</tr>
+<tr>
+<td>sentinel down-after-milliseconds</td>
+<td>&lt;服务名称&gt;&lt;毫秒数（整数）&gt;</td>
+<td>指定哨兵在监控Redis服务时，当Redis服务在一个默认毫秒数内都无法回答时，单个哨兵认为的主观下线时间，默认为30000（30秒）</td>
+</tr>
+<tr>
+<td>sentinel parallel-syncs</td>
+<td>&lt;服务名称&gt;&lt;服务器数（整数）&gt;</td>
+<td>指定可以有多少个Redis服务同步新的主机，一般而言，这个数字越小同步时间越长，而越大，则对网络资源要求越高</td>
+</tr>
+<tr>
+<td>sentinel failover-timeout</td>
+<td>&lt;服务名称&gt;&lt;毫秒数（整数）&gt;</td>
+<td>指定故障切换允许的毫秒数，超过这个时间，就认为故障切换失败，默认为3分钟</td>
+</tr>
+<tr>
+<td>sentinel notification-script</td>
+<td>&lt;服务名称&gt;&lt;脚本路径&gt;</td>
+<td>指定sentinel检测到该监控的redis实例指向的实例异常时，调用的报警脚本。该配置项可选，比较常用</td>
+</tr>
+</tbody></table>
+<h2 id="Redis缓存穿透和雪崩（常用）"><a href="#Redis缓存穿透和雪崩（常用）" class="headerlink" title="Redis缓存穿透和雪崩（常用）"></a>Redis缓存穿透和雪崩（常用）</h2><p>Redis缓存的使用，极大地提升了应用程序的性能和效率，特别是数据查询方面。但同时，它也带来了一些问题。其中，最要害的问题，就是数据的一致性问题，从严格意义上讲，这个问题无解。如果对数据的一致性要求很高，那么就不能使用缓存。</p>
+<p>另外的一些典型问题就是，缓存穿透和缓存击穿。</p>
+<h3 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h3><blockquote>
+<p>概念</p>
+</blockquote>
+<p>缓存穿透是指查询一个根本不存在的数据，缓存层和持久层都不会命中。在日常工作中出于容错的考虑，如果从持久层查不到数据则不写入缓存层，缓存穿透将导致不存在的数据每次请求都要到持久层去查询，失去了缓存保护后端持久的意义。</p>
+<p><img src="/2021/08/09/Redis/%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>解决方案</p>
+</blockquote>
+<p>1.<strong>布隆过滤器</strong></p>
+<p>布隆过滤器是一种数据结构，对所有可能查询的参数以hash形式存储，在控制层先进行校验，不符合则丢弃，从而避免了对底层存储系统的查询压力。</p>
+<p>2.<strong>缓存空对象</strong></p>
+<p>缓存空对象：是指在持久层没有命中的情况下，对key进行set （key,null）</p>
+<p>这样做会存在两个问题：</p>
+<ol>
+<li><p>value为null 不代表不占用内存空间，空值做了缓存，意味着缓存层中存了更多的键，需要更多的内存空间，比较有效的方法是针对这类数据设置一个较短的过期时间，让其自动剔除。</p>
+</li>
+<li><p>缓存层和存储层的数据会有一段时间窗口的不一致，可能会对业务有一定影响。例如过期时间设置为5分钟，如果此时存储层添加了这个数据，那此段时间就会出现缓存层和存储层数据的不一致，此时可以利用消息系统或者其他方式清除掉缓存层中的空对象。</p>
+</li>
+</ol>
+<h3 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h3><blockquote>
+<p>概念</p>
+</blockquote>
+<ul>
+<li>当前key是一个热点key（例如一个秒杀活动），并发量非常大。</li>
+<li>重建缓存不能在短时间完成，可能是一个复杂计算，例如复杂的SQL、多次IO、多个依赖等。</li>
+</ul>
+<p>在缓存失效的瞬间，有大量线程来重建缓存，造成后端负载加大，甚至可能会让应用崩溃。</p>
+<blockquote>
+<p>解决方案</p>
+</blockquote>
+<p>1.<strong>永不过期</strong></p>
+<ul>
+<li>从缓存层面来看，确实没有设置过期时间，所以不会出现热点key过期后产生的问题，也就是“物理”不过期。</li>
+<li>从功能层面来看，为每个value设置一个逻辑过期时间，当发现超过逻辑过期时间后，会使用单独的线程去更新缓存</li>
+</ul>
+<p>2.<strong>加互斥锁</strong></p>
+<p>只允许一个线程重建缓存，其他线程等待重建缓存的线程执行完，重新从缓存获取数据即可。set(key,value,timeout)</p>
+<h3 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h3><blockquote>
+<p>概念</p>
+</blockquote>
+<p>由于缓存层承载着大量请求，有效地保护了存储层，但是如果缓存层由于某些原因不可用（宕机）或者大量缓存由于超时时间相同在同一时间段失效（大批key失效/热点数据失效），大量请求直接到达存储层，存储层压力过大导致系统雪崩。</p>
+<blockquote>
+<p>解决方案</p>
+</blockquote>
+<ul>
+<li>可以把缓存层设计成高可用的，即使个别节点、个别机器、甚至是机房宕掉，依然可以提供服务。利用sentinel或cluster实现。</li>
+<li>采用多级缓存，本地进程作为一级缓存，redis作为二级缓存，不同级别的缓存设置的超时时间不同，即使某级缓存过期了，也有其他级别缓存兜底</li>
+<li>缓存的过期时间用随机值，尽量让不同的key的过期时间不同（例如：定时任务新建大批量key，设置的过期时间相同）</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/">学习资料</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/09/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java多线程基础</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/06/MyBatis/">
+                        <span class="hidden-mobile">MyBatis</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
