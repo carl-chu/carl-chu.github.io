@@ -332,3 +332,21 @@ description: 测试
 内容。。。
 ```
 
+## 插入图片问题
+
+在hexo中插入图片的方式:`{% asset_img image.jpg 这是一张图片 %}`
+
+解决方法：
+
+1.安装插件：`npm install hexo-renderer-marked`
+
+2.修改_config.yml文件
+
+```yml
+post_asset_folder: true
+marked:
+  prependRoot: true
+  postAsset: true
+```
+
+3.使用`![](image.jpg)`的方式插入图片
