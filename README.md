@@ -224,7 +224,7 @@ $ hexo clean && hexo deploy
 4. 在储存库中建立 `.github/workflows/pages.yml`，并填入以下内容 (将 `16` 替换为上个步骤中记下的版本)：
 
 ```
-.github/workflows/pages.ymlname: Pages
+name: Pages
 
 on:
   push:
@@ -268,7 +268,19 @@ jobs:
 
 一键部署
 
+1. 安装 [hexo-deployer-git](https://github.com/hexojs/hexo-deployer-git)。
+2. 在 `_config.yml` 中添加以下配置（如果配置已经存在，请将其替换为如下）:
 
+```
+deploy:
+  type: git
+  repo: https://github.com/<username>/<project>
+  # example, https://github.com/hexojs/hexojs.github.io
+  branch: gh-pages
+```
+
+1. 执行 `hexo clean && hexo deploy` 。
+2. 浏览 `<GitHub 用户名>.github.io` 检查你的网站能否运作。
 
 # 修改主题
 
