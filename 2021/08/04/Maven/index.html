@@ -1,0 +1,847 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CarlChu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Maven（项目构建工具）1.Maven四大特性1.1.依赖管理系统用groupId、artifavtId、version组成Coordination（坐标）唯一标识 坐标属性的理解 ​	Maven坐标为各种组件引入了秩序，任何一个组件都必须明确定义自己的坐标。 groupId ​	定义当前Maven项目隶属的实际项目-公司名称。 artifactId ​	该元素定义实际项目中的一个Maven模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven">
+<meta property="og:url" content="https://carl-chu.github.io/2021/08/04/Maven/index.html">
+<meta property="og:site_name" content="CarlChu&#39;s blog">
+<meta property="og:description" content="Maven（项目构建工具）1.Maven四大特性1.1.依赖管理系统用groupId、artifavtId、version组成Coordination（坐标）唯一标识 坐标属性的理解 ​	Maven坐标为各种组件引入了秩序，任何一个组件都必须明确定义自己的坐标。 groupId ​	定义当前Maven项目隶属的实际项目-公司名称。 artifactId ​	该元素定义实际项目中的一个Maven模块">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://carl-chu.github.io/2021/08/04/Maven/image-20210630112712583.png">
+<meta property="article:published_time" content="2021-08-04T18:32:00.000Z">
+<meta property="article:modified_time" content="2023-05-13T15:27:33.933Z">
+<meta property="article:author" content="CarlChu">
+<meta property="article:tag" content="项目构建工具">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://carl-chu.github.io/2021/08/04/Maven/image-20210630112712583.png">
+  
+  
+  
+  <title>Maven - CarlChu&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"carl-chu.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CarlChu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Maven"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-08-04 18:32" pubdate>
+          2021年8月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          109 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Maven</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Maven（项目构建工具）"><a href="#Maven（项目构建工具）" class="headerlink" title="Maven（项目构建工具）"></a>Maven（项目构建工具）</h1><h2 id="1-Maven四大特性"><a href="#1-Maven四大特性" class="headerlink" title="1.Maven四大特性"></a>1.Maven四大特性</h2><h3 id="1-1-依赖管理系统"><a href="#1-1-依赖管理系统" class="headerlink" title="1.1.依赖管理系统"></a>1.1.依赖管理系统</h3><p>用groupId、artifavtId、version组成Coordination（坐标）唯一标识</p>
+<p><strong>坐标属性的理解</strong></p>
+<p>​	Maven坐标为各种组件引入了秩序，任何一个组件都必须明确定义自己的坐标。</p>
+<p><strong>groupId</strong></p>
+<p>​	定义当前Maven项目隶属的实际项目-公司名称。</p>
+<p><strong>artifactId</strong></p>
+<p>​	该元素定义实际项目中的一个Maven模块-项目名，推荐使用实际项目名称作为artifactId的前缀。比如：spring-bean, spring-webmvc等。</p>
+<p><strong>version</strong></p>
+<p>​	该元素定义Maven项目当前所处的版本。</p>
+<h3 id="1-2-多模块构建"><a href="#1-2-多模块构建" class="headerlink" title="1.2.多模块构建"></a>1.2.多模块构建</h3><p>​	在Maven中需要定义一个parent POM作为一组module的聚合POM。在该POM中可以使用<code>&lt;modules&gt;</code>标签来定义一组子模块。parent POM不会有什么实际构建产出。而parent POM中的build配置以及依赖配置都会自动继承给子module。</p>
+<h3 id="1-3-一致的项目结构"><a href="#1-3-一致的项目结构" class="headerlink" title="1.3.一致的项目结构"></a>1.3.一致的项目结构</h3><p>​	设计理念Conversion over configuration（约定大于配置），制定了一套项目目录结构作为标准的java项目结构，解决不同IDE带来的文件目录不一致问题。</p>
+<h3 id="1-4-一致的构建模型和插件机制"><a href="#1-4-一致的构建模型和插件机制" class="headerlink" title="1.4.一致的构建模型和插件机制"></a>1.4.一致的构建模型和插件机制</h3><h2 id="2-Maven依赖的基本概念"><a href="#2-Maven依赖的基本概念" class="headerlink" title="2.Maven依赖的基本概念"></a>2.Maven依赖的基本概念</h2><p>根元素project下的dependencies可以包含多个dependence元素，以声明多个依赖。每个依赖都包含以下元素：</p>
+<ol>
+<li><p>groupId，artifactId，version：依赖的坐标。</p>
+</li>
+<li><p>Type：依赖的类型，大部分情况下不需要声明，默认值为jar。</p>
+</li>
+<li><p>Scope：依赖范围（compile，test，provided，runtime，system）</p>
+<ul>
+<li><p>compile：编译依赖范围</p>
+<p>如果没有指定，就会默认使用该依赖范围。使用此依赖范围的Maven依赖，对于编译、测试、运行三种classpath都有效。</p>
+</li>
+<li><p>test：测试依赖范围</p>
+<p>使用此依赖范围Maven依赖，只对于测试classpath有效，但在运行时无效。</p>
+</li>
+<li><p>provided：已提供依赖范围</p>
+<p>使用此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运行时无效。</p>
+</li>
+<li><p>runtime：运行时依赖范围</p>
+<p>使用此依赖范围的Maven依赖，对于测试和运行classpath有效，但在编译主代码时无效。</p>
+</li>
+<li><p>system：系统依赖范围</p>
+<p>该依赖与三种classpath的关系，和provided依赖范围完全一致。但是，使用system范围依赖时必须通过systemPath元素显式地指定依赖文件的路径。由于此类依赖不是通过Maven仓库解析的，而且往往与本机系统绑定，可能造成构建的不可移植，因此应谨慎使用。一般不使用。</p>
+</li>
+</ul>
+</li>
+<li><p>Optional：标记依赖是否可选。</p>
+</li>
+<li><p>Exclusions：用来排除传递性依赖。</p>
+</li>
+</ol>
+<p>##3.Maven的生命周期</p>
+<p>maven构建项目的过程，清理，编译，测试，报告，打包，安装，部署。</p>
+<h2 id="4-Maven仓库"><a href="#4-Maven仓库" class="headerlink" title="4.Maven仓库"></a>4.Maven仓库</h2><p>仓库分为两类：本地仓库和远程仓库。</p>
+<p>远程仓库分为三种：中央仓库、私服、其他公共库。</p>
+<h3 id="4-1-中央仓库"><a href="#4-1-中央仓库" class="headerlink" title="4.1.中央仓库"></a>4.1.中央仓库</h3><p>由于原始本地仓库是空的，maven必须知道至少一个可用的远程仓库，才能执行maven命令的时候下载需要的构件。</p>
+<h3 id="4-2-私服"><a href="#4-2-私服" class="headerlink" title="4.2.私服"></a>4.2.私服</h3><p>私服是一种特殊的远程仓库，是架设在局域网内的仓库服务，私服代理广域网上的远程仓库，供局域网内的maven用户使用。当maven需要下载构件时，它去私服当中找，如果私服没有，则从外部远程仓库下载，并缓存在私服上，再提供给maven。</p>
+<p>###4.3.其他公共库</p>
+<p>常用阿里云仓库</p>
+<h3 id="4-4-conf配置文件"><a href="#4-4-conf配置文件" class="headerlink" title="4.4.conf配置文件"></a>4.4.conf配置文件</h3><p>settings.xml的顶级元素</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">settings</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span> </span><br><span class="hljs-tag">          <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> </span><br><span class="hljs-tag">          <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">localRepository</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">interactiveMode</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">usePluginRegistry</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">offline</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">pluginGroups</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">servers</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">mirrors</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">proxies</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">profiles</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">activeProfiles</span>/&gt;</span>	<br><span class="hljs-tag">&lt;/<span class="hljs-name">settings</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>LocalRepository</strong></p>
+<p>作用：该值表示构建系统本地仓库的路径。</p>
+<p>其默认值：~&#x2F;.m2&#x2F;repository</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">localRepository</span>&gt;</span>$&#123;user.home&#125;/.m2/repository<span class="hljs-tag">&lt;/<span class="hljs-name">localRepository</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>InteractiveMode</strong></p>
+<p>作用：表示maven是否需要和用户交互以获得输入。</p>
+<p>如果maven需要和用户交互以获得输入，则设置成true，反之则应为false。默认为true。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">interactiveMode</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">interactiveMode</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>UsePluginRegistry</strong></p>
+<p>作用：maven是否需要使用plugin-registry.xml文件来管理插件版本。</p>
+<p>如果需要让maven使用文件~&#x2F;.m2&#x2F;plugin-registry.xml来管理插件版本，则设为true。默认为false。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">usePluginRegistry</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">usePluginRegistry</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>Offline</strong></p>
+<p>作用：表示maven是否需要在离线模式下运行。</p>
+<p>如果构建系统需要在离线模式下运行，则为true，默认为false。 当由于网络设置原因或者安全因素，构建服务器不能连接远程仓库的时候，该配置就十分有用。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">offline</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">offline</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>PluginGroups</strong></p>
+<p><strong>作用</strong>：当插件的组织id（groupId）没有显式提供时，供搜寻插件组织Id（groupId）的列表。 </p>
+<p>该元素包含一个pluginGroup元素列表，每个子元素包含了一个组织Id（groupId）。 当我们使用某个插件，并且没有在命令行为其提供组织Id（groupId）的时候，Maven就会使用该列表。默认情况下该列表包含了<code>org.apache.maven.plugins</code>和<code>org.codehaus.mojo</code></p>
+<p><strong>Servers</strong></p>
+<p><strong>作用</strong>：一般，仓库的下载和部署是在pom.xml文件中的<code>repositories</code>和<code>distributionManagement</code>元素中定义的。然而，一般类似用户名、密码（<strong>有些仓库访问是需要安全认证的</strong>）等信息不应该在pom.xml文件中配置，这些信息可以配置在<code>settings.xml</code>中。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">settings</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0</span></span><br><span class="hljs-string"><span class="hljs-tag">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span><br>  ...<br>  <span class="hljs-comment">&lt;!--配置服务端的一些设置。一些设置如安全证书不应该和pom.xml一起分发。这种类型的信息应该存在于构建服务器上的settings.xml文件中。 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">servers</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--服务器元素包含配置服务器时需要的信息 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">server</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--这是server的id（注意不是用户登陆的id），该id与distributionManagement中repository元素的id相匹配。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>server001<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--鉴权用户名。鉴权用户名和鉴权密码表示服务器认证所需要的登录名和密码。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span>my_login<span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--鉴权密码 。鉴权用户名和鉴权密码表示服务器认证所需要的登录名和密码。密码加密功能已被添加到2.1.0 +。详情请访问密码加密页面 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>my_password<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--鉴权时使用的私钥位置。和前两个元素类似，私钥位置和私钥密码指定了一个私钥的路径（默认是$&#123;user.home&#125;/.ssh/id_dsa）以及如果需要的话，一个密语。将来passphrase和password元素可能会被提取到外部，但目前它们必须在settings.xml文件以纯文本的形式声明。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">privateKey</span>&gt;</span>$&#123;usr.home&#125;/.ssh/id_dsa<span class="hljs-tag">&lt;/<span class="hljs-name">privateKey</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--鉴权时使用的私钥密码。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">passphrase</span>&gt;</span>some_passphrase<span class="hljs-tag">&lt;/<span class="hljs-name">passphrase</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--文件被创建时的权限。如果在部署的时候会创建一个仓库文件或者目录，这时候就可以使用权限（permission）。这两个元素合法的值是一个三位数字，其对应了unix文件系统的权限，如664，或者775。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">filePermissions</span>&gt;</span>664<span class="hljs-tag">&lt;/<span class="hljs-name">filePermissions</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--目录被创建时的权限。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">directoryPermissions</span>&gt;</span>775<span class="hljs-tag">&lt;/<span class="hljs-name">directoryPermissions</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">server</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">servers</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">settings</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>Mirrors</strong></p>
+<p><strong>作用</strong>：为仓库列表配置的下载镜像列表。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">settings</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0</span></span><br><span class="hljs-string"><span class="hljs-tag">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span><br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">mirrors</span>&gt;</span><br>    <span class="hljs-comment">&lt;!-- 给定仓库的下载镜像。 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">mirror</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- 该镜像的唯一标识符。id用来区分不同的mirror元素。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>planetmirror.com<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- 镜像名称 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>PlanetMirror Australia<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- 该镜像的URL。构建系统会优先考虑使用该URL，而非使用默认的服务器URL。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">url</span>&gt;</span>http://downloads.planetmirror.com/pub/maven2<span class="hljs-tag">&lt;/<span class="hljs-name">url</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- 被镜像的服务器的id。例如，如果我们要设置了一个Maven中央仓库（http://repo.maven.apache.org/maven2/）的镜像，就需要将该元素设置成central。这必须和中央仓库的id central完全一致。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">mirrorOf</span>&gt;</span>central<span class="hljs-tag">&lt;/<span class="hljs-name">mirrorOf</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">mirror</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">mirrors</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">settings</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>Proxies</strong></p>
+<p><strong>作用</strong>：用来配置不同的代理。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">settings</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0</span></span><br><span class="hljs-string"><span class="hljs-tag">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span><br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">proxies</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--代理元素包含配置代理时需要的信息 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">proxy</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--代理的唯一定义符，用来区分不同的代理元素。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>myproxy<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--该代理是否是激活的那个。true则激活代理。当我们声明了一组代理，而某个时候只需要激活一个代理的时候，该元素就可以派上用处。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">active</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">active</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--代理的协议。 协议://主机名:端口，分隔成离散的元素以方便配置。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">protocol</span>&gt;</span>http<span class="hljs-tag">&lt;/<span class="hljs-name">protocol</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--代理的主机名。协议://主机名:端口，分隔成离散的元素以方便配置。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>proxy.somewhere.com<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--代理的端口。协议://主机名:端口，分隔成离散的元素以方便配置。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>8080<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--代理的用户名，用户名和密码表示代理服务器认证的登录名和密码。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span>proxyuser<span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--代理的密码，用户名和密码表示代理服务器认证的登录名和密码。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>somepassword<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--不该被代理的主机名列表。该列表的分隔符由代理服务器指定；例子中使用了竖线分隔符，使用逗号分隔也很常见。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">nonProxyHosts</span>&gt;</span>*.google.com|ibiblio.org<span class="hljs-tag">&lt;/<span class="hljs-name">nonProxyHosts</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">proxy</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">proxies</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">settings</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>Profiles</strong></p>
+<p><strong>作用</strong>：根据环境参数来调整构建配置的列表。 <code>settings.xml</code>中的<code>profile</code>元素是<code>pom.xml</code>中<code>profile</code>元素的<strong>裁剪版本</strong>。 它包含了<code>id</code>、<code>activation</code>、<code>repositories</code>、<code>pluginRepositories</code>和 <code>properties</code>元素。这里的profile元素只包含这五个子元素是因为这里只关心构建系统这个整体（这正是settings.xml文件的角色定位），而非单独的项目对象模型设置。如果一个<code>settings.xml</code>中的<code>profile</code>被激活，它的值会覆盖任何其它定义在<code>pom.xml</code>中带有相同id的<code>profile</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">settings</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0</span></span><br><span class="hljs-string"><span class="hljs-tag">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span><br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">profiles</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">profile</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- profile的唯一标识 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- 自动触发profile的条件逻辑 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">activation</span> /&gt;</span><br>      <span class="hljs-comment">&lt;!-- 扩展属性列表 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">properties</span> /&gt;</span><br>      <span class="hljs-comment">&lt;!-- 远程仓库列表 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">repositories</span> /&gt;</span><br>      <span class="hljs-comment">&lt;!-- 插件仓库列表 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">pluginRepositories</span> /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">profile</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">profiles</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">settings</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>Activation</strong></p>
+<p><strong>作用</strong>：自动触发<code>profile</code>的条件逻辑。 如<code>pom.xml</code>中的<code>profile</code>一样，<code>profile</code>的作用在于它能够在某些特定的环境中自动使用某些特定的值；这些环境通过<code>activation</code>元素指定。 <code>activation</code>元素并不是激活<code>profile</code>的唯一方式。<code>settings.xml</code>文件中的<code>activeProfile</code>元素可以包含<code>profile</code>的<code>id</code>。<code>profile</code>也可以通过在命令行，使用-P标记和逗号分隔的列表来显式的激活（如，-P test）。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">activation</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--profile默认是否激活的标识 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">activeByDefault</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">activeByDefault</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--当匹配的jdk被检测到，profile被激活。例如，1.4激活JDK1.4，1.4.0_2，而!1.4激活所有版本不是以1.4开头的JDK。 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">jdk</span>&gt;</span>1.5<span class="hljs-tag">&lt;/<span class="hljs-name">jdk</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--当匹配的操作系统属性被检测到，profile被激活。os元素可以定义一些操作系统相关的属性。 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">os</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--激活profile的操作系统的名字 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>Windows XP<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--激活profile的操作系统所属家族(如 &#x27;windows&#x27;) --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">family</span>&gt;</span>Windows<span class="hljs-tag">&lt;/<span class="hljs-name">family</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--激活profile的操作系统体系结构 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">arch</span>&gt;</span>x86<span class="hljs-tag">&lt;/<span class="hljs-name">arch</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--激活profile的操作系统版本 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>5.1.2600<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">os</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--如果Maven检测到某一个属性（其值可以在POM中通过$&#123;name&#125;引用），其拥有对应的name = 值，Profile就会被激活。如果值字段是空的，那么存在属性名称字段就会激活profile，否则按区分大小写方式匹配属性值字段 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--激活profile的属性的名称 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mavenVersion<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--激活profile的属性的值 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>2.0.3<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--提供一个文件名，通过检测该文件的存在或不存在来激活profile。missing检查文件是否存在，如果不存在则激活profile。另一方面，exists则会检查文件是否存在，如果存在则激活profile。 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">file</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--如果指定的文件存在，则激活profile。 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">exists</span>&gt;</span>$&#123;basedir&#125;/file2.properties<span class="hljs-tag">&lt;/<span class="hljs-name">exists</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--如果指定的文件不存在，则激活profile。 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">missing</span>&gt;</span>$&#123;basedir&#125;/file1.properties<span class="hljs-tag">&lt;/<span class="hljs-name">missing</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">file</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">activation</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注：在maven工程的pom.xml所在目录下执行<code>mvn help:active-profiles</code>命令可以查看中央仓储的profile是否在工程中生效。</strong></p>
+<p><strong>properties</strong></p>
+<p><strong>作用</strong>：对应<code>profile</code>的扩展属性列表。 maven属性和ant中的属性一样，可以用来存放一些值。这些值可以在<code>pom.xml</code>中的任何地方使用标记<code>$&#123;X&#125;</code>来使用，这里X是指属性的名称。属性有五种不同的形式，并且都能在settings.xml文件中访问。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- </span><br><span class="hljs-comment">  1. env.X: 在一个变量前加上&quot;env.&quot;的前缀，会返回一个shell环境变量。例如,&quot;env.PATH&quot;指代了$path环境变量（在Windows上是%PATH%）。 </span><br><span class="hljs-comment">  2. project.x：指代了POM中对应的元素值。例如: &lt;project&gt;&lt;version&gt;1.0&lt;/version&gt;&lt;/project&gt;通过$&#123;project.version&#125;获得version的值。 </span><br><span class="hljs-comment">  3. settings.x: 指代了settings.xml中对应元素的值。例如：&lt;settings&gt;&lt;offline&gt;false&lt;/offline&gt;&lt;/settings&gt;通过 $&#123;settings.offline&#125;获得offline的值。 </span><br><span class="hljs-comment">  4. Java System Properties: 所有可通过java.lang.System.getProperties()访问的属性都能在POM中使用该形式访问，例如 $&#123;java.home&#125;。 </span><br><span class="hljs-comment">  5. x: 在&lt;properties/&gt;元素中，或者外部文件中设置，以$&#123;someVar&#125;的形式使用。</span><br><span class="hljs-comment"> --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">user.install</span>&gt;</span>$&#123;user.home&#125;/our-project<span class="hljs-tag">&lt;/<span class="hljs-name">user.install</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注：如果该profile被激活，则可以在<code>pom.xml</code>中使用${user.install}。</strong></p>
+<p><strong>Repositories</strong></p>
+<p><strong>作用</strong>：远程仓库列表，它是maven用来填充构建系统本地仓库所使用的一组远程仓库。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">repositories</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--包含需要连接到远程仓库的信息 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">repository</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--远程仓库唯一标识 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>codehausSnapshots<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--远程仓库名称 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>Codehaus Snapshots<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--如何处理远程仓库里发布版本的下载 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">releases</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--true或者false表示该仓库是否为下载某种类型构件（发布版，快照版）开启。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">enabled</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">enabled</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--该元素指定更新发生的频率。Maven会比较本地POM和远程POM的时间戳。这里的选项是：always（一直），daily（默认，每日），interval：X（这里X是以分钟为单位的时间间隔），或者never（从不）。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">updatePolicy</span>&gt;</span>always<span class="hljs-tag">&lt;/<span class="hljs-name">updatePolicy</span>&gt;</span><br>      <span class="hljs-comment">&lt;!--当Maven验证构件校验文件失败时该怎么做-ignore（忽略），fail（失败），或者warn（警告）。 --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">checksumPolicy</span>&gt;</span>warn<span class="hljs-tag">&lt;/<span class="hljs-name">checksumPolicy</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">releases</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--如何处理远程仓库里快照版本的下载。有了releases和snapshots这两组配置，POM就可以在每个单独的仓库中，为每种类型的构件采取不同的策略。例如，可能有人会决定只为开发目的开启对快照版本下载的支持。参见repositories/repository/releases元素 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">snapshots</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">enabled</span> /&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">updatePolicy</span> /&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">checksumPolicy</span> /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">snapshots</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--远程仓库URL，按protocol://hostname/path形式 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">url</span>&gt;</span>http://snapshots.maven.codehaus.org/maven2<span class="hljs-tag">&lt;/<span class="hljs-name">url</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--用于定位和排序构件的仓库布局类型-可以是default（默认）或者legacy（遗留）。Maven 2为其仓库提供了一个默认的布局；然而，Maven 1.x有一种不同的布局。我们可以使用该元素指定布局是default（默认）还是legacy（遗留）。 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">layout</span>&gt;</span>default<span class="hljs-tag">&lt;/<span class="hljs-name">layout</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">repository</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">repositories</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>pluginRepositories</strong></p>
+<p><strong>作用</strong>：发现插件的远程仓库列表。 和<code>repository</code>类似，只是<code>repository</code>是管理jar包依赖的仓库，<code>pluginRepositories</code>则是管理插件的仓库。 maven插件是一种特殊类型的构件。由于这个原因，插件仓库独立于其它仓库。<code>pluginRepositories</code>元素的结构和<code>repositories</code>元素的结构类似。每个<code>pluginRepository</code>元素指定一个Maven可以用来寻找新插件的远程地址。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">pluginRepositories</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- 包含需要连接到远程插件仓库的信息.参见profiles/profile/repositories/repository元素的说明 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">pluginRepository</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">releases</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">enabled</span> /&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">updatePolicy</span> /&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">checksumPolicy</span> /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">releases</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">snapshots</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">enabled</span> /&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">updatePolicy</span> /&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">checksumPolicy</span> /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">snapshots</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">id</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">name</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">url</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">layout</span> /&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">pluginRepository</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">pluginRepositories</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>ActiveProfiles</strong></p>
+<p><strong>作用</strong>：手动激活profiles的列表，按照<code>profile</code>被应用的顺序定义<code>activeProfile</code>。 该元素包含了一组<code>activeProfile</code>元素，每个<code>activeProfile</code>都含有一个profile id。任何在<code>activeProfile</code>中定义的profile id，不论环境设置如何，其对应的 <code>profile</code>都会被激活。如果没有匹配的<code>profile</code>，则什么都不会发生。 例如，env-test是一个activeProfile，则在pom.xml（或者profile.xml）中对应id的profile会被激活。如果运行过程中找不到这样一个profile，Maven则会像往常一样运行。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">settings</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/SETTINGS/1.0.0</span></span><br><span class="hljs-string"><span class="hljs-tag">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span><br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">activeProfiles</span>&gt;</span><br>    <span class="hljs-comment">&lt;!-- 要激活的profile id --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">activeProfile</span>&gt;</span>env-test<span class="hljs-tag">&lt;/<span class="hljs-name">activeProfile</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">activeProfiles</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">settings</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="5-Maven工程约定目录结构"><a href="#5-Maven工程约定目录结构" class="headerlink" title="5.Maven工程约定目录结构"></a>5.Maven工程约定目录结构</h2><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>${basedir}</td>
+<td>存放pom.xml和所有的子目录</td>
+</tr>
+<tr>
+<td>${basedir}&#x2F;src&#x2F;main&#x2F;java</td>
+<td>项目的java源代码</td>
+</tr>
+<tr>
+<td>${basedir}&#x2F;src&#x2F;main&#x2F;resources</td>
+<td>项目的资源</td>
+</tr>
+<tr>
+<td>${basedir}&#x2F;src&#x2F;test&#x2F;java</td>
+<td>项目的测试类，例如Junit代码</td>
+</tr>
+<tr>
+<td>${basedir}&#x2F;src&#x2F;test&#x2F;resources</td>
+<td>测试使用的资源</td>
+</tr>
+</tbody></table>
+<p><img src="/2021/08/04/Maven/image-20210630112712583.png" srcset="/img/loading.gif" lazyload alt="工程目录结构"></p>
+<h2 id="6-Maven命令"><a href="#6-Maven命令" class="headerlink" title="6.Maven命令"></a>6.Maven命令</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mvn -version</td>
+<td>显示版本信息</td>
+</tr>
+<tr>
+<td>mvn clean</td>
+<td>清理项目生产的临时文件，一般是模块下的target目录</td>
+</tr>
+<tr>
+<td>mvn compile</td>
+<td>编译主程序，一般编译模块下的src&#x2F;main&#x2F;java目录，生成target目录，存放编译主程序之后生成的字节码文件。</td>
+</tr>
+<tr>
+<td>mvn test-compile</td>
+<td>编译测试程序，生成target目录，存放编译测试程序之后生成的字节码文件。</td>
+</tr>
+<tr>
+<td>mvn test</td>
+<td>测试命令（会生成一个目录surefire-reports，保存测试结果）</td>
+</tr>
+<tr>
+<td>mvn package</td>
+<td>打包主程序，把主程序打包成jar包或war包</td>
+</tr>
+<tr>
+<td>mvn install</td>
+<td>将打包的jar&#x2F;war文件复制到本地仓库中，供其他模块使用</td>
+</tr>
+<tr>
+<td>mvn deploy</td>
+<td>部署主程序（把本工程打包，按照本工程的坐标保存到本地库中）</td>
+</tr>
+</tbody></table>
+<p>运行maven命令的时候需要定位到maven项目的目录，也就是项目的pom.xml所在目录，否则，必须通过参数来指定项目目录。</p>
+<h2 id="7-POM依赖"><a href="#7-POM依赖" class="headerlink" title="7.POM依赖**"></a>7.POM依赖**</h2><h2 id="8-插件"><a href="#8-插件" class="headerlink" title="8.插件**"></a>8.插件**</h2><h2 id="9-依赖冲突"><a href="#9-依赖冲突" class="headerlink" title="9.依赖冲突**"></a>9.依赖冲突**</h2>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7/">#项目构建工具</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Maven</div>
+      <div>https://carl-chu.github.io/2021/08/04/Maven/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CarlChu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年8月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/05/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/" title="注解和反射">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">注解和反射</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

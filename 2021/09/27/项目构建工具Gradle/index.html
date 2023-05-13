@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CarlChu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="技术分享——项目构建工具GradleGradle是什么？Java世界主要的三大构建工具：Ant、Maven和Gradle。 Gradle是一个基于Apache Ant和Apache Maven概念的项目自动化构建开源工具，使用基于Groovy的特定领域语言（DSL）来声明项目设置，抛弃了基于XML的各种繁琐配置。 Google选择gradle作为android项目的构建工具，因为gradle非常灵">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目构建工具Gradle">
+<meta property="og:url" content="https://carl-chu.github.io/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/index.html">
+<meta property="og:site_name" content="CarlChu&#39;s blog">
+<meta property="og:description" content="技术分享——项目构建工具GradleGradle是什么？Java世界主要的三大构建工具：Ant、Maven和Gradle。 Gradle是一个基于Apache Ant和Apache Maven概念的项目自动化构建开源工具，使用基于Groovy的特定领域语言（DSL）来声明项目设置，抛弃了基于XML的各种繁琐配置。 Google选择gradle作为android项目的构建工具，因为gradle非常灵">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://carl-chu.github.io/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201007764.png">
+<meta property="og:image" content="https://carl-chu.github.io/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201142468.png">
+<meta property="og:image" content="https://carl-chu.github.io/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201524782.png">
+<meta property="og:image" content="https://carl-chu.github.io/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201639981.png">
+<meta property="article:published_time" content="2021-09-27T11:02:00.000Z">
+<meta property="article:modified_time" content="2023-05-13T15:27:33.945Z">
+<meta property="article:author" content="CarlChu">
+<meta property="article:tag" content="项目构建工具">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://carl-chu.github.io/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201007764.png">
+  
+  
+  
+  <title>项目构建工具Gradle - CarlChu&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"carl-chu.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CarlChu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="项目构建工具Gradle"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-09-27 11:02" pubdate>
+          2021年9月27日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">项目构建工具Gradle</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="技术分享——项目构建工具Gradle"><a href="#技术分享——项目构建工具Gradle" class="headerlink" title="技术分享——项目构建工具Gradle"></a>技术分享——项目构建工具Gradle</h3><h3 id="Gradle是什么？"><a href="#Gradle是什么？" class="headerlink" title="Gradle是什么？"></a><strong>Gradle是什么？</strong></h3><p>Java世界主要的三大构建工具：Ant、Maven和Gradle。</p>
+<p>Gradle是一个基于Apache Ant和Apache Maven概念的项目自动化构建开源工具，使用基于Groovy的特定领域语言（DSL）来声明项目设置，抛弃了基于XML的各种繁琐配置。</p>
+<p>Google选择gradle作为android项目的构建工具，因为gradle非常灵活，除了java外，gradle还支持C++、Groovy、Kotlin、Scala和Swift，并且计划未来支持更多语言。</p>
+<p>目前有的spring项目已经从maven切换到gradle，而且安卓项目只支持gradle构建。</p>
+<p>例如Spring团队在Spring Boot 2.3.0.M1版本中使用了Gradle来构建项目，这是Spring Boot使用Gradle而非Maven构建的第一个版本。（Spring Framework自2012年的3.2.0版本起就使用Gradle构建）。</p>
+<p><strong>为什么从maven迁移到gradle?</strong></p>
+<ul>
+<li>使用gradle和maven构建apache commons lang3比较</li>
+</ul>
+<p><img src="/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201007764.png" srcset="/img/loading.gif" lazyload alt="gradle和maven构建速度比较"></p>
+<p>Gradle运行测试的速度提高了1.7倍，而在使用构建缓存时，构建速度提高了30倍</p>
+<ul>
+<li>使用gradle和maven构建小项目（10个模块，每个模块50个源文件和50个测试文件）的比较</li>
+</ul>
+<p><img src="/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201142468.png" srcset="/img/loading.gif" lazyload alt="gradle和maven构建速度比较"></p>
+<p>对于clean构建，Gradle 的速度要快 2-3 倍，增量构建的速度要快 7 倍，当 Gradle 任务被缓存时，速度会快 14 倍。</p>
+<ul>
+<li>使用gradle和maven构建中等项目（100个模块，每个模块100个源文件和100个测试文件）的比较</li>
+</ul>
+<p><img src="/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201524782.png" srcset="/img/loading.gif" lazyload alt="gradle和maven构建速度比较"></p>
+<p>对于clean构建，Gradle 的速度要快 4-5 倍，增量构建的速度要快 40 倍，当 Gradle 任务被缓存时，速度会快 13 倍。</p>
+<ul>
+<li>使用gradle和maven构建大项目（500个模块，每个模块100个源文件和100个测试文件）的比较：</li>
+</ul>
+<p><img src="/2021/09/27/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7Gradle/image-20210914201639981.png" srcset="/img/loading.gif" lazyload alt="gradle和maven构建速度比较"></p>
+<p>对于clean构建，Gradle 的速度要快 3-10 倍，增量构建的速度要快 85 倍，当 Gradle 任务被缓存时，速度会快 13 倍。</p>
+<p>Spring团队考虑由Maven切换到Gradle的主要原因就是为了减少构建项目所需的时间。在开发和测试的过程中，由于减少了等待构建完成所花费的时间，花费在修复错误和实现新功能上所花费的时间也就变多了。</p>
+<p>经过Spring团队的统计，使用Gradle构建Spring Boot项目的平均成功构建时间为9分22秒，而在CI和开发人员自己的机器上，基于Maven的完整构建需要一个小时或更长的时间。</p>
+<p><a target="_blank" rel="noopener" href="https://spring.io/blog/2020/06/08/migrating-spring-boot-s-build-to-gradle">Migrating Spring Boot’s Build to Gradle</a></p>
+<h3 id="为什么gradle速度更快-什么是增量构建和构建缓存？"><a href="#为什么gradle速度更快-什么是增量构建和构建缓存？" class="headerlink" title="为什么gradle速度更快?什么是增量构建和构建缓存？"></a>为什么gradle速度更快?什么是增量构建和构建缓存？</h3><p>gradle引入增量构建的概念，使用构建缓存、守护进程方式提高构建速度，结果就是gradle的构建速度要远超maven，平均构建速度比maven快好几倍，而且项目越大差距越明显。</p>
+<ul>
+<li><p>引入增量构建</p>
+<p>Gradle通过跟踪任务的输入和输出，只运行必要的内容，并在可能的情况下只处理有变化的文件，从而避免多余的工作。</p>
+<p>向Gradle提供关于任务的输入和输出的信息。可以将一个任务配置为只有输出。在执行任务之前，Gradle会检查输出，如果输出没有变化，就会跳过任务的执行。在实际构建中，一个任务通常也有输入，包括源文件、资源和属性。Gradle在执行任务之前会检查输入和输出是否有变化。</p>
+<p><strong>在一个任务第一次执行之前，Gradle会对输入文件进行快照。这个快照包含了一组输入文件和每个文件的内容的哈希值。然后，Gradle执行该任务。如果任务成功完成，Gradle 会获取输出的快照。这个快照包含了输出文件的集合和每个文件内容的哈希值。Gradle将这两个快照持久化，以便在下次执行任务时使用。</strong></p>
+<p><strong>Gradle比较的是输入和输出的校验和，而不是只比较文件的时间戳。即使任务每次运行都会覆盖所有的输出文件，但内容并没有改变，任务也不需要再次运行。</strong></p>
+</li>
+<li><p>引入构建缓存</p>
+<p>Gradle 通过对任务的所有输入进行哈希计算来构建缓存密钥并将其用来唯一地识别一个任务的输出。启用构建缓存功能后，如果Gradle能在构建缓存中找到该密钥，Gradle将跳过此任务的执行，直接将缓存中的输出复制到构建目录中。</p>
+<p><strong>缓存可以跨机器共享，如果使用的是持续集成服务器，可以配置Gradle将任务输出推送到共享构建缓存中。当开发者构建时，已经在CI上构建的任务输出被复制到开发者的机器上，可以极大地加快本地构建的速度。</strong></p>
+</li>
+<li><p>守护进程</p>
+<p>守护进程是一个一直运行的进程，可以避免每次JVM启动的开销，还可以在内存中缓存项目结构、文件、task等信息，从而提升运行速度。</p>
+<p>守护进程是默认启用的，可以使用命令<code>gradle --stop</code>来停止守护进程。守护进程会监控内存使用情况，并在系统内存不足时停止空闲状态的守护进程。若守护进程在3个小时或更短时间内不活动，它就会自动终止自己。</p>
+</li>
+</ul>
+<h3 id="gradle项目目录结构"><a href="#gradle项目目录结构" class="headerlink" title="gradle项目目录结构"></a><strong>gradle项目目录结构</strong></h3><p><a target="_blank" rel="noopener" href="https://docs.gradle.org/current/userguide/directory_layout.html#dir:project_root">The Directories and Files Gradle Uses</a></p>
+<p>|————.gradle (1)</p>
+<p>|————gradle</p>
+<p>|				|————wrapper (2)</p>
+<p>|————gradlew (3)</p>
+<p>|————gradlew.bat （3）</p>
+<p>|————settings.gradle (4)</p>
+<p>|————subproject-one (5)</p>
+<p>|				|————build.gradle (6)</p>
+<p>|————build.gradle (7)</p>
+<p>（1）由gradle生成的项目缓存（最多每24小时检查一次，7天未使用则删除）</p>
+<p>（2）gradle wrapper 的jar文件和配置</p>
+<p>（3）shell脚本和windows批处理脚本，使用gradle-wapper来执行构建</p>
+<p>（4）项目的设置文件，定义子项目列表</p>
+<p>（5）子项目</p>
+<p>（6）子项目配置文件</p>
+<p>（7）根项目配置文件</p>
+<p>gradle-wapper是一个脚本，用来调用一个已声明版本的gradle。使用wapper可以快速启动和运行gradle项目，无需遵循人工流程。</p>
+<p>gradle-wrapper.properties</p>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>distributionBase</td>
+<td>下载的Gradle压缩包解压后存储的主目录</td>
+</tr>
+<tr>
+<td>distributionPath</td>
+<td>相对于distributionBase的解压后的Gradle压缩包的路径</td>
+</tr>
+<tr>
+<td>zipStoreBase</td>
+<td>同distributionBase，只不过是存放zip压缩包的</td>
+</tr>
+<tr>
+<td>zipStorePath</td>
+<td>同distributionPath，只不过是存放zip压缩包的</td>
+</tr>
+<tr>
+<td>distributionUrl</td>
+<td>Gradle发行版压缩包的下载地址</td>
+</tr>
+</tbody></table>
+<p>&#x2F;&#x2F;<strong>build.gradle</strong>文件构建脚本块</p>
+<p><a target="_blank" rel="noopener" href="https://docs.gradle.org/current/dsl/">Gradle DSL Version 7.2</a></p>
+<p>java插件</p>
+<p><a target="_blank" rel="noopener" href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_project_layout">The Java Plugin (gradle.org)</a></p>
+<h3 id="Gradle与Maven的异同点"><a href="#Gradle与Maven的异同点" class="headerlink" title="Gradle与Maven的异同点"></a><strong>Gradle与Maven的异同点</strong></h3><p>Maven:</p>
+<ul>
+<li>三个内置的构建生命周期(lifecycle)：clean, default, site。<a target="_blank" rel="noopener" href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">Maven - 构建生命周期简介 (apache.org)</a></li>
+<li>最小的运行单元是目标(goal)</li>
+<li>插件可以把自己的目标绑定在生命周期的某个阶段(phase)上</li>
+</ul>
+<p>Gradle:</p>
+<ul>
+<li>构建时有三个不同的阶段：初始化、配置和执行。<a target="_blank" rel="noopener" href="https://www.pianshen.com/article/536459444/">详解Gradle项目构建的生命周期</a></li>
+<li>最小的运行单元是任务(task)，任务之间相互依赖。</li>
+<li>可以动态创建任务。</li>
+</ul>
+<p>依赖冲突：</p>
+<p>gradle：默认选择版本更高的依赖。</p>
+<p>maven：默认路径最近原则。</p>
+<p>Gradle与Maven的项目目录结构基本相同:</p>
+<ul>
+<li>生产代码存放在src&#x2F;main&#x2F;java</li>
+<li>测试代码存放在src&#x2F;test&#x2F;java</li>
+</ul>
+<p>不同之处：<br>Maven项目依赖由pom.xml定义</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>log4j<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>log4j<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.2.12<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>Gradle项目依赖由build.gradle定义</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">dependencies</span> &#123;<br>    implementation <span class="hljs-string">&#x27;log4j:log4j:1.2.12&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>灵活：gradle项目的配置文件是一个groovy脚本文件，在其中可以以编程方式自定义一些构建任务，因为使用了编程方式，这就带给了我们极大的灵活性和便捷性。例如，在打jar包的时候输出jar文件的大小，在gradle中仅需在构建脚本中编写几行代码即可，但在maven中则需要编写maven插件来实现，复杂程度不在一个水平。</p>
+<h3 id="gradle和maven优缺点总结"><a href="#gradle和maven优缺点总结" class="headerlink" title="gradle和maven优缺点总结"></a><strong>gradle和maven优缺点总结</strong></h3><p>gradle优点：</p>
+<ol>
+<li>使用构建缓存、守护进程等方式提高构建速度，项目构建速度快。</li>
+<li>采用代码逻辑的方式进行构建，使其非常灵活。</li>
+<li>配置代码减少，大约为maven的pom配置的四分之一。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>由于gradle配置过于灵活，导致它的构建比基于maven构建更难以维护和理解。</li>
+<li>更新速度很快，语法变化较大。</li>
+</ol>
+<p>缓存带来的问题：</p>
+<p>gradle内部存在缓存机制，当文件输入和输出都没改变的情况下，认为这就是没变的代码，直接进行输出。但当你改变的依赖包版本，它有时并没更新，这也是缓存机制的问题。</p>
+<p>maven缺点:</p>
+<ol>
+<li>配置文件是xml格式的，如果项目依赖的包比较多，xml文件会变得非常长。</li>
+<li>xml文件不太灵活，如果需要在构建过程中添加自定义逻辑会非常麻烦。</li>
+<li>虽然maven稳定但对新版java支持不足，需要更新内置的maven插件。</li>
+<li>使用maven构建的项目都会经过几个生命流程，内部没有缓存机制，随着项目越来越大重新构建所花费的时间也就越长。</li>
+</ol>
+<p>maven优点：</p>
+<ol>
+<li>maven项目比较容易看懂，上手简单。</li>
+<li>maven非常稳定</li>
+</ol>
+<h3 id="从maven迁移到gradle"><a href="#从maven迁移到gradle" class="headerlink" title="从maven迁移到gradle"></a>从maven迁移到gradle</h3><p><a target="_blank" rel="noopener" href="https://docs.gradle.org/current/userguide/migrating_from_maven.html">从阿帕奇马文迁移构建 (gradle.org)</a></p>
+<p>使用<code>gradle init</code>命令，此命令通常用于新项目的初始化，但也可以使用此命令自动将现有的Maven构建转换为Gradle，包括解析现有的pom并生成相应的gradle构建脚本，如果是多项目，还会创建一个设置脚本。</p>
+<p>不一定会有转换问题，但是还是需要做一些手动工作</p>
+<h3 id="总结与展望"><a href="#总结与展望" class="headerlink" title="总结与展望"></a>总结与展望</h3><p>总结：</p>
+<p>Ant：Ant的功能虽然强大，但过于灵活，规范性不足，对目录结构及build.xml没有默认约定，且没有统一的项目依赖管理。</p>
+<p>Maven：Maven解决了规范性的问题，也顺带解决了依赖项统一管理的问题，但由于规范性太强，灵活性不足，pom.xml采用Xml结构，项目一大，Xml就显得冗长。</p>
+<p>Gradle：综合了Ant和Maven的优点，吸收了Ant中task的思想，然后把Maven的目录规范以及仓库思想也融合了进来，但允许用户自由的修改默认的规范（如，可随意修改源码目录），配置文件则采用Groovy语言来书写，Groovy是一门可编程语言，配置文件本身就可以视为一份源代码，并最终交由Gradle来处理执行。</p>
+<p>展望：</p>
+<p>虽然目前大家的电脑性能比较强劲，在做项目构建的时候对构建性能的优势不是那么迫切，但是对大型项目来说，一次构建可能会需要很长时间，尤其是对于自动化构建和CI环境来说，当然是构建地越快越好。从Spring 和 Spring Boot等项目从Maven迁移到Gradle来看，Gradle有可能成为未来主流的项目构建工具。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7/">#项目构建工具</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>项目构建工具Gradle</div>
+      <div>https://carl-chu.github.io/2021/09/27/项目构建工具Gradle/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CarlChu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年9月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/04/21/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" title="JUC并发编程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JUC并发编程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/25/%E5%9F%BA%E4%BA%8Etoken%E7%9A%84%E9%89%B4%E6%9D%83%E6%9C%BA%E5%88%B6/" title="基于token的鉴权机制">
+                        <span class="hidden-mobile">基于token的鉴权机制</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
