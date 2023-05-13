@@ -266,6 +266,8 @@ jobs:
 
 7. 前往 `https://<你的 GitHub 用户名>.github.io` 查看网站。
 
+一键部署
+
 
 
 # 修改主题
