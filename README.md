@@ -204,7 +204,7 @@ $ hexo clean && hexo deploy
 
 
 
-方式二
+## 方式二
 
 使用 [GitHub Actions](https://docs.github.com/zh/actions) 部署至 GitHub Pages
 
