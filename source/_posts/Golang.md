@@ -3,9 +3,8 @@ title: Golang
 date: 2023-01-27 20:25:00
 tags: Go
 categories: 学习笔记
+index_img: /img/go.jpg
 ---
-
-Golang
 
 # Go语言基本语法
 
