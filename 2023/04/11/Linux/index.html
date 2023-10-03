@@ -24,8 +24,9 @@
 <meta property="og:description" content="Linux系统中一切皆文件 Linux目录结构 &#x2F;bin（谨慎修改） binery，放常用命令   &#x2F;boot（勿动） boot分区（引导分区）   &#x2F;dev（勿动） device，设备目录   &#x2F;etc（勿动） 系统管理所需的配置文件   &#x2F;home（随便动） 普通用户的主目录   &#x2F;lib（勿动） library（依赖），库文件，类似">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-11T15:18:00.000Z">
-<meta property="article:modified_time" content="2023-05-13T15:38:33.468Z">
+<meta property="article:modified_time" content="2023-10-03T13:55:06.463Z">
 <meta property="article:author" content="CarlChu">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -1568,9 +1569,9 @@
 <p><code>printenv | less</code>（查看全局变量），<code>printenv USER</code>（不用加$）</p>
 <p>查看当前定义的全部变量（全局和局部）：<code>set</code></p>
 <h3 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h3><p>基本语法：</p>
-<p>（1）定义变量：变量名&#x3D;变量值，***<u>注意：&#x3D;号后面不能有空格</u>***</p>
+<p>（1）定义变量：变量名&#x3D;变量值，<u>注意：&#x3D;号后面不能有空格</u></p>
 <p>（2）撤销变量：unset 变量名</p>
-<p>（3）声明只读变量：readonly 变量，***<u>注意：不能unset</u>***</p>
+<p>（3）声明只读变量：readonly 变量，<u>注意：不能unset</u></p>
 <p>局部变量提升为全局变量</p>
 <ul>
 <li>先定义局部变量</li>
@@ -1579,7 +1580,7 @@
 <p>注意：在子shell中修改了全局变量不会影响父shell中对应的全局变量（export导出也不行）</p>
 <p>（局部变量只能在当前shell中访问到，提升为全局变量后，自己及子shell可以获取到）</p>
 <p>变量定义规则：</p>
-<p>（1）变量名称可以由字母、数字和下划线组成，但是不能以数字开头，***<u>环境变量名建议大写</u>***。</p>
+<p>（1）变量名称可以由字母、数字和下划线组成，但是不能以数字开头，<u>环境变量名建议大写</u>。</p>
 <p>（2）等号两侧不能有空格。</p>
 <p>（3）在bash中，变量默认类型都是字符串类型，无法直接进行数值运算。</p>
 <p>（4）变量的值如果有空格，需要使用双引号或单引号括起来。</p>
@@ -1626,6 +1627,13 @@
 
     </div>
   
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+    </div>
   
 </div>
 
