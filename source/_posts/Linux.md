@@ -1313,7 +1313,7 @@ string="abcd"
 echo ${#string} 
 ```
 
-当变量为数组时，`${#string}`等价于`${#string[0]}`
+当变量为数组时，**${#string}**等价于**${#string[0]}**
 
 
 
@@ -1371,10 +1371,6 @@ EOF
 注释内容
 !
 ```
-
-
-
-
 
 
 
@@ -2150,6 +2146,5 @@ echo ${array[*]}
 
 bubbleSort "${array[*]}"
 ```
-
 
 
