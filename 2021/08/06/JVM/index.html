@@ -23,20 +23,13 @@
 <meta property="og:site_name" content="CarlChu&#39;s blog">
 <meta property="og:description" content="JVM探究 请你谈谈对JVM的理解？java8虚拟机和之前的变化更新？ 什么是OOM，什么是栈溢出StackOverFlowError？怎么分析？ JVM的常用调优参数有哪些？ 内存快照如何抓取，怎么分析Dump文件？ 谈谈JVM中，类加载器的认识？  The Java® Virtual Machine Specification (oracle.com)（官方文档） 【JVM系列】JVM内存区域">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/2019040912492050.png">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/20170610165140237.png">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/7634245-7b7882e1f4ea5d7d.png">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/20201122130153848.png">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/20201122130059715.png">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/20201122125952373.png">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/20201122125459801.png">
-<meta property="og:image" content="https://carl-chu.github.io/2021/08/06/JVM/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA.jpg">
+<meta property="og:image" content="https://carl-chu.github.io/img/jvm.jpg">
 <meta property="article:published_time" content="2021-08-06T17:23:51.000Z">
-<meta property="article:modified_time" content="2023-10-03T14:11:44.011Z">
+<meta property="article:modified_time" content="2023-10-03T15:24:07.970Z">
 <meta property="article:author" content="CarlChu">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://carl-chu.github.io/2021/08/06/JVM/2019040912492050.png">
+<meta name="twitter:image" content="https://carl-chu.github.io/img/jvm.jpg">
   
   
   
@@ -570,6 +563,19 @@ e --&gt; g[To Survivor空间/幸存1区]
 
 
 
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
 
 
 
@@ -613,7 +619,7 @@ e --&gt; g[To Survivor空间/幸存1区]
     <div class="footer-inner">
   
     <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
     </div>
   
   
