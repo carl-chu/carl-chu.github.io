@@ -3,6 +3,7 @@ title: Redis
 date: 2021-08-09 10:20:43
 tags: Nosql
 categories: 学习笔记
+index_img: /img/redis_logo.png
 ---
 
 **Redis**（Remote Dictionary Server）

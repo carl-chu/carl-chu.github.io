@@ -3,6 +3,7 @@ title: Nuttx
 date: 2023-04-30 18:00:00
 tags: RTOS
 categories: 学习笔记
+index_img: /img/nuttx_logo.jpg
 ---
 
 # NuttX

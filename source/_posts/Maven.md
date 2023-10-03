@@ -3,6 +3,7 @@ title: Maven
 date: 2021-08-04 18:32:00
 tags: 项目构建工具
 categories: 学习笔记
+index_img: /img/maven_logo.png
 ---
 
 # Maven（项目构建工具）

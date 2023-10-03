@@ -3,7 +3,7 @@ title: MyBatis
 date: 2021-08-06 19:19:16
 tags: ORM框架
 categories: 学习笔记
-index_img: /img/mybatis-logo.png
+index_img: /img/mybatis_logo.jpg
 ---
 
 # MyBatis

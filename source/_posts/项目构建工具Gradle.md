@@ -3,6 +3,7 @@ title: 项目构建工具Gradle
 date: 2021-09-27 11:02:00
 tags: 项目构建工具
 categories: 学习笔记
+index_img: /img/gradle_logo.jpg
 ---
 
 ### 技术分享——项目构建工具Gradle

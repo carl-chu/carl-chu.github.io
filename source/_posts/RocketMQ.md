@@ -3,6 +3,7 @@ title: RocketMQ
 date: 2022-08-15 22:21:00
 tags: MessageQueue
 categories: 学习笔记
+index_img: /img/rocketmq_logo.jpg
 ---
 
 # RocketMQ

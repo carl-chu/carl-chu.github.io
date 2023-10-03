@@ -3,6 +3,7 @@ title: 基于token的鉴权机制
 date: 2021-08-25 17:37:00
 tags: Java
 categories: 学习笔记
+index_img: /img/jwt.png
 ---
 
 # 基于token的鉴权机制

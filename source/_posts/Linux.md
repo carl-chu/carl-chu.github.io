@@ -3,6 +3,7 @@ title: Linux
 date: 2023-04-11 15:18:00
 tags: Linux
 categories: 学习笔记
+index_img: /img/linux.png
 ---
 
 Linux系统中一切皆文件
@@ -1311,9 +1312,8 @@ echo "helloworld"
 ```bash
 string="abcd"
 echo ${#string} 
+# 当变量为数组时，${#string}等价于${#string[0]}
 ```
-
-当变量为数组时，**${#string}**等价于**${#string[0]}**
 
 
 

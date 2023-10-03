@@ -3,6 +3,7 @@ title: JUC并发编程
 date: 2022-04-21 11:22:00
 tags: Java
 categories: 学习笔记
+index_img: /img/java_logo.jpg
 ---
 
 

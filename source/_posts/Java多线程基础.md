@@ -3,6 +3,7 @@ title: Java多线程基础
 date: 2021-08-09 10:27:54
 tags: Java
 categories: 学习笔记
+index_img: /img/java_logo.jpg
 ---
 
 **JAVA多线程基础**

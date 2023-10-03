@@ -3,7 +3,7 @@ title: Git
 date: 2021-08-06 17:09:13
 tags:
 categories: 学习笔记
-index_img: /img/git-logo.png
+index_img: /img/git_logo.jpg
 ---
 
 # Git（分布式版本控制系统）

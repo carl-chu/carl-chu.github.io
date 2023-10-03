@@ -3,6 +3,7 @@ title: Makefile
 date: 2023-05-03 17:24:00
 tags: 
 categories: 学习笔记
+index_img: /img/makefile.png
 ---
 
 https://gitee.com/yanmu_ym/cpp/blob/master/Make/make.md

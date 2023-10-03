@@ -3,6 +3,7 @@ title: MySQL基础
 date: 2021-08-06 18:53:42
 tags: SQL
 categories: 学习笔记
+index_img: /img/mysql_logo.jpg
 ---
 
 MySQL基础

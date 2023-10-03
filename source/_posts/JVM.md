@@ -4,6 +4,7 @@ date: 2021-08-06 17:23:51
 tags: Java
 categories: 学习笔记
 mermaid: true
+index_img: /img/jvm.jpg
 ---
 
 # JVM探究

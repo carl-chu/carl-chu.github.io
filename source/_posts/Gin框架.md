@@ -3,6 +3,7 @@ title: Gin框架
 date: 2023-02-05 21:50:00
 tags: Go
 categories: 学习笔记
+index_img: /img/gin_logo.jpg
 ---
 
 Gin框架

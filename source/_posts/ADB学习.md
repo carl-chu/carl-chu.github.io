@@ -3,6 +3,7 @@ title: ADB学习
 date: 2023-02-10 20:54:00
 tags: Android
 categories: 学习笔记
+index_img: /img/android_logo.jpg
 ---
 
 ADB学习

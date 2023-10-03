@@ -3,6 +3,7 @@ title: SpringCloud Alibaba
 date: 2022-09-29 19:35:00
 tags: 
 categories: 学习笔记
+index_img: /img/springcloud.png
 ---
 
 # SpringCloud Alibaba
